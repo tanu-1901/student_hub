@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Test Engine - StudentPro</title>
+    <link rel="stylesheet" href="css/test.css">
+</head>
+
+<body>
+
+    <header class="test-header">
+        <div class="test-title">
+            <span class="test-badge">LIVE TEST</span>
+            <h2 id="paperTitle">Practice Paper</h2>
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="timer-box" id="timerBox">
+                <span>⏱ Remaining Time:</span>
+                <strong id="timeDisplay">30:00</strong>
+            </div>
+            <a href="dashboard.html" style="text-decoration: none; font-size: 13px; font-weight: 600; color: #ef4444; padding: 6px 12px; border: 1px solid #fecaca; border-radius: 6px; background: #fef2f2;">Exit Test ✕</a>
+        </div>
+    </header>
+
+    <div class="test-container">
+        <!-- QUESTION WORKSPACE -->
+        <main class="question-workspace">
+            <div class="question-header">
+                <span id="questionCounter">Question 1 of 5</span>
+                <span class="question-marks">+1.0 / -0.25</span>
+            </div>
+
+            <div class="question-body">
+                <h3 id="questionText">Loading Question...</h3>
+                <div class="options-group" id="optionsContainer">
+                    <!-- Options injected dynamically -->
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button id="prevBtn" class="btn btn-secondary" disabled>← Previous</button>
+                <button id="clearBtn" class="btn btn-tertiary">Clear Selection</button>
+                <button id="nextBtn" class="btn btn-primary">Next →</button>
+            </div>
+        </main>
+
+        <!-- QUESTION PALETTE & SUMMARY -->
+        <aside class="palette-sidebar">
+            <div class="palette-card">
+                <h3>Question Palette</h3>
+                <div class="palette-legend">
+                    <span class="legend-item"><span class="badge answered"></span> Answered</span>
+                    <span class="legend-item"><span class="badge unanswered"></span> Skipped</span>
+                    <span class="legend-item"><span class="badge current"></span> Active</span>
+                </div>
+                <div class="palette-grid" id="paletteGrid">
+                    <!-- Question palette buttons injected dynamically -->
+                </div>
+            </div>
+
+            <button id="submitTestBtn" class="btn btn-submit">Submit Test 🚀</button>
+        </aside>
+    </div>
+
+    <script src="js/test.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Test Center - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/mock-tests.css">
+    <style>
+        .test-hub-container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 20px;
+        }
+
+        .hub-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+
+        .hub-tab-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hub-tab-btn:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+
+        .hub-tab-btn.active {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        /* LIVE TEST ENGINE WRAPPER */
+        .live-quiz-wrapper {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .test-title h2 {
+            font-size: 20px;
+            color: #1e293b;
+        }
+
+        .timer-badge {
+            background: #fee2e2;
+            color: #ef4444;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .question-box {
+            font-size: 17px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            padding: 13px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .option-btn.selected {
+            border-color: #4f46e5;
+            background-color: #e0e7ff;
+            color: #4338ca;
+            font-weight: 700;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-ctrl {
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-ctrl:hover {
+            background: #4338ca;
+        }
+
+        .btn-ctrl:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        /* RESULT & REPORT SCREEN STYLES */
+        .result-screen {
+            display: none;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .congrats-heading {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .sub-message {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .report-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .report-card .title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .report-card .value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .val-correct { color: #16a34a !important; }
+        .val-wrong { color: #dc2626 !important; }
+
+        .accuracy-box {
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+
+        .accuracy-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 700;
+            color: #3730a3;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #c7d2fe;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #4f46e5;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html" class="active">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="test-hub-container">
+
+        <!-- HEADER BANNER -->
+        <div class="welcome-banner" style="margin-bottom: 20px;">
+            <div>
+                <h1>Mock Test Arena 📝</h1>
+                <p>Choose from curated aptitude and reasoning categories or challenge the 30-question Full-Stack Test.</p>
+            </div>
+            <a href="iq_quize.html" class="primary-btn">Take Speed IQ Test ⚡</a>
+        </div>
+
+        <!-- HUB TABS -->
+        <div class="hub-tabs">
+            <button class="hub-tab-btn active" id="tabCatalogBtn" onclick="switchView('catalog')">
+                📚 Category Tests Catalog
+            </button>
+            <button class="hub-tab-btn" id="tabFullStackBtn" onclick="switchView('fullstack')">
+                🚀 Full Stack Mock Test (30 Qs)
+            </button>
+        </div>
+
+        <!-- VIEW 1: CATALOG OF MOCK TESTS -->
+        <div id="catalogView">
+            <div class="filter-bar">
+                <button class="filter-btn active" data-category="all">All Tests</button>
+                <button class="filter-btn" data-category="reasoning">Logical Reasoning</button>
+                <button class="filter-btn" data-category="aptitude">Quantitative Aptitude</button>
+                <button class="filter-btn" data-category="english">Verbal Ability</button>
+                <button class="filter-btn" data-category="gk">General Knowledge</button>
+            </div>
+
+            <div class="tests-grid" id="testsGrid"></div>
+        </div>
+
+        <!-- VIEW 2: FULL STACK 30 QUESTIONS LIVE TEST -->
+        <div id="fullstackView" style="display: none;">
+            <div class="live-quiz-wrapper">
+                <!-- QUIZ SCREEN -->
+                <div id="quizScreen">
+                    <div class="test-header">
+                        <div class="test-title">
+                            <h2>Full Stack Mock Test #1</h2>
+                            <span style="font-size:12px; color:#64748b;" id="questionCounter">Question 1 of 30</span>
+                        </div>
+                        <div class="timer-badge" id="testTimer">20:00</div>
+                    </div>
+
+                    <div class="question-box" id="questionText">Loading question...</div>
+                    <div class="options-list" id="optionsContainer"></div>
+
+                    <div class="quiz-controls">
+                        <button class="btn-ctrl" id="prevBtn" onclick="prevQuestion()" disabled>← Previous</button>
+                        <button class="btn-ctrl" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+                    </div>
+                </div>
+
+                <!-- DETAILED REPORT RESULT SCREEN -->
+                <div id="resultScreen" class="result-screen">
+                    <div id="congratsBadge" style="font-size: 52px; margin-bottom: 10px;">🏆</div>
+                    <div class="congrats-heading" id="congratsText">Congratulations!</div>
+                    <p class="sub-message" id="congratsSubText">You have successfully completed the test.</p>
+
+                    <div class="report-grid">
+                        <div class="report-card">
+                            <div class="title">Total Questions</div>
+                            <div class="value" id="repTotal">30</div>
+                        </div>
+                        <div class="report-card">
+                            <div class="title">Time Taken</div>
+                            <div class="value" id="repTime">0m 0s</div>
+                        </div>
+                        <div class="report-card" style="background: #f0fdf4; border-color: #bbf7d0;">
+                            <div class="title" style="color: #166534;">Correct Answers</div>
+                            <div class="value val-correct" id="repCorrect">0</div>
+                        </div>
+                        <div class="report-card" style="background: #fef2f2; border-color: #fecaca;">
+                            <div class="title" style="color: #991b1b;">Wrong Answers</div>
+                            <div class="value val-wrong" id="repWrong">0</div>
+                        </div>
+                    </div>
+
+                    <div class="accuracy-box">
+                        <div class="accuracy-label">
+                            <span>Overall Score Accuracy</span>
+                            <span id="repPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="repProgressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button class="btn-ctrl" onclick="location.reload()">Retake Test</button>
+                        <a href="dashboard.html" class="btn-ctrl" style="text-decoration:none; background:#22c55e;">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Check session
+        const storedEmail = localStorage.getItem("studentEmail") || "student@gmail.com";
+        document.getElementById("userEmailDisplay").textContent = storedEmail;
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+
+        // VIEW TOGGLE
+        function switchView(viewName) {
+            const catalogView = document.getElementById("catalogView");
+            const fullstackView = document.getElementById("fullstackView");
+            const tabCatalogBtn = document.getElementById("tabCatalogBtn");
+            const tabFullStackBtn = document.getElementById("tabFullStackBtn");
+
+            if (viewName === "fullstack") {
+                catalogView.style.display = "none";
+                fullstackView.style.display = "block";
+                tabFullStackBtn.classList.add("active");
+                tabCatalogBtn.classList.remove("active");
+                if (!timerInterval) startTimer();
+            } else {
+                fullstackView.style.display = "none";
+                catalogView.style.display = "block";
+                tabCatalogBtn.classList.add("active");
+                tabFullStackBtn.classList.remove("active");
+            }
+        }
+
+        // ==================== CATALOG DATA & LOGIC ====================
+        const mockTests = [
+            {
+                id: "reasoning-1",
+                title: "Logical Reasoning - Level 1",
+                category: "reasoning",
+                description: "Practice pattern matching, series, and analytical problem-solving skills.",
+                questions: 5,
+                duration: "30 Mins",
+                difficulty: "Easy"
+            },
+            {
+                id: "aptitude-1",
+                title: "Quantitative Aptitude - Basic",
+                category: "aptitude",
+                description: "Covers percentages, ratios, simple equations, and arithmetic problems.",
+                questions: 5,
+                duration: "30 Mins",
+                difficulty: "Medium"
+            },
+            {
+                id: "english-1",
+                title: "Verbal Ability & Grammar",
+                category: "english",
+                description: "Test vocabulary, sentence correction, and reading comprehension skills.",
+                questions: 5,
+                duration: "20 Mins",
+                difficulty: "Easy"
+            },
+            {
+                id: "gk-1",
+                title: "General Awareness 2026",
+                category: "gk",
+                description: "Current affairs, basic science, history, and general knowledge questions.",
+                questions: 5,
+                duration: "15 Mins",
+                difficulty: "Medium"
+            }
+        ];
+
+        function renderTests(filter = "all") {
+            const grid = document.getElementById("testsGrid");
+            grid.innerHTML = "";
+
+            const filtered = filter === "all" 
+                ? mockTests 
+                : mockTests.filter(t => t.category === filter);
+
+            filtered.forEach(test => {
+                const card = document.createElement("div");
+                card.className = "test-card";
+                card.innerHTML = `
+                    <div>
+                        <span class="test-badge badge-${test.category}">
+                            ${test.category.toUpperCase()}
+                        </span>
+                        <h3>${test.title}</h3>
+                        <p>${test.description}</p>
+                    </div>
+                    <div>
+                        <div class="test-meta">
+                            <span>⏱ ${test.duration}</span>
+                            <span>❓ ${test.questions} Qs</span>
+                            <span>📊 ${test.difficulty}</span>
+                        </div>
+                        <button class="start-test-btn" onclick="launchTest('${test.id}', '${test.title}')">
+                            Start Test →
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function launchTest(testId, testTitle) {
+            localStorage.setItem("activeTestId", testId);
+            localStorage.setItem("selectedPaper", testTitle);
+            window.location.href = "test.html";
+        }
+
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                renderTests(e.target.dataset.category);
+            });
+        });
+
+        // ==================== FULLSTACK 30-QUESTION ENGINE ====================
+        const questions = [
+            { q: "Which HTML element is used to insert a Line Break?", opts: ["<break>", "<br>", "<lb>", "<line>"], ans: 1 },
+            { q: "Which CSS property is used to change text color?", opts: ["font-color", "text-color", "color", "fg-color"], ans: 2 },
+            { q: "What is the correct syntax for declaring a constant variable in JavaScript?", opts: ["var x = 10;", "const x = 10;", "let x = 10;", "constant x = 10;"], ans: 1 },
+            { q: "Which array method adds one or more elements to the end of an array in JavaScript?", opts: ["push()", "unshift()", "pop()", "append()"], ans: 0 },
+            { q: "In CSS Flexbox, which property is used to align items horizontally along the main axis?", opts: ["align-items", "justify-content", "align-content", "flex-direction"], ans: 1 },
+            { q: "Which HTTP method is typically used to request data from a server?", opts: ["POST", "PUT", "DELETE", "GET"], ans: 3 },
+            { q: "What does SQL stand for?", opts: ["Structured Query Language", "Sequential Query Language", "Standard Question Language", "System Query Logic"], ans: 0 },
+            { q: "In Node.js, which built-in module is used to handle file paths?", opts: ["fs", "http", "path", "os"], ans: 2 },
+            { q: "Which of the following is used in React to manage component state?", opts: ["useEffect", "useState", "useContext", "useReducer"], ans: 1 },
+            { q: "Which HTML attribute is used to uniquely identify an element?", opts: ["class", "type", "name", "id"], ans: 3 },
+            { q: "Which HTTP status code signifies 'Not Found'?", opts: ["200", "500", "404", "403"], ans: 2 },
+            { q: "What is the purpose of the 'alt' attribute in an <img> tag?", opts: ["Alternative text if image fails to load", "Alignment of the image", "Image title tooltip", "Animation style"], ans: 0 },
+            { q: "Which CSS property controls the size of text?", opts: ["text-size", "font-style", "text-style", "font-size"], ans: 3 },
+            { q: "Which JavaScript operator is used to check both value and type equality?", opts: ["==", "=", "===", "!="], ans: 2 },
+            { q: "What does DOM stand for in Web Development?", opts: ["Data Object Model", "Document Object Model", "Digital Ordinance Model", "Desktop Oriented Mode"], ans: 1 },
+            { q: "Which SQL clause is used to filter records in a database query?", opts: ["WHERE", "ORDER BY", "GROUP BY", "SELECT"], ans: 0 },
+            { q: "Which pattern in JavaScript is used to handle asynchronous promises cleanly?", opts: ["await", "defer", "async/await", "then"], ans: 2 },
+            { q: "What is Git primarily used for?", opts: ["Web Hosting", "Version Control System", "Database Management", "Code Execution Engine"], ans: 1 },
+            { q: "Which format is widely used for transmitting data between client and server?", opts: ["JSON", "XML", "HTML", "TXT"], ans: 0 },
+            { q: "In CSS, what does 'box-sizing: border-box;' do?", opts: ["Includes padding and border in the element's total width/height", "Excludes padding from width", "Adds double border", "Removes borders completely"], ans: 0 },
+            { q: "Which HTML tag is used to create a hyperlink?", opts: ["<a>", "<link>", "<href>", "<url>"], ans: 0 },
+            { q: "Which CSS property is used to make text bold?", opts: ["font-weight", "text-decoration", "font-style", "text-weight"], ans: 0 },
+            { q: "How do you write a comment in JavaScript?", opts: ["<!-- Comment -->", "/* Comment */", "// Comment", "' Comment"], ans: 2 },
+            { q: "Which method converts a JSON string into a JavaScript object?", opts: ["JSON.stringify()", "JSON.parse()", "JSON.toObject()", "JSON.convert()"], ans: 1 },
+            { q: "What is the default port for HTTP protocol?", opts: ["443", "80", "8080", "3000"], ans: 1 },
+            { q: "Which database type is MongoDB?", opts: ["Relational (SQL)", "NoSQL (Document-based)", "Graph Database", "Flat File"], ans: 1 },
+            { q: "In CSS Grid, which property defines the columns of a grid container?", opts: ["grid-template-columns", "grid-column-gap", "grid-auto-flow", "flex-direction"], ans: 0 },
+            { q: "What does NPM stand for?", opts: ["Node Package Manager", "New Programming Model", "Network Protocol Module", "National Performance Metric"], ans: 0 },
+            { q: "Which JavaScript method is used to remove the last element from an array?", opts: ["shift()", "pop()", "slice()", "splice()"], ans: 1 },
+            { q: "Which HTML tag is used to specify an unordered list?", opts: ["<ol>", "<li>", "<ul>", "<list>"], ans: 2 }
+        ];
+
+        let currentIdx = 0;
+        let selectedAnswers = new Array(questions.length).fill(null);
+        let timeLeft = 1200; // 20 mins
+        let timerInterval = null;
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                const secs = (timeLeft % 60).toString().padStart(2, '0');
+                document.getElementById("testTimer").textContent = `${mins}:${secs}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById("questionCounter").textContent = `Question ${currentIdx + 1} of ${questions.length}`;
+            document.getElementById("questionText").textContent = `${currentIdx + 1}. ${q.q}`;
+
+            const optsBox = document.getElementById("optionsContainer");
+            optsBox.innerHTML = "";
+
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = `option-btn ${selectedAnswers[currentIdx] === idx ? "selected" : ""}`;
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    selectedAnswers[currentIdx] = idx;
+                    renderQuestion();
+                };
+                optsBox.appendChild(btn);
+            });
+
+            document.getElementById("prevBtn").disabled = currentIdx === 0;
+            document.getElementById("nextBtn").textContent = currentIdx === questions.length - 1 ? "Submit Test" : "Next Question →";
+        }
+
+        function nextQuestion() {
+            if (currentIdx < questions.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            } else {
+                submitTest();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                renderQuestion();
+            }
+        }
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            questions.forEach((q, idx) => {
+                if (selectedAnswers[idx] === q.ans) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            const totalTimeTakenSecs = 1200 - timeLeft;
+            const timeMins = Math.floor(totalTimeTakenSecs / 60);
+            const timeSecs = totalTimeTakenSecs % 60;
+            const timeTakenStr = `${timeMins}m ${timeSecs}s`;
+            const percentage = Math.round((correctCount / questions.length) * 100);
+
+            const badgeEl = document.getElementById("congratsBadge");
+            const headingEl = document.getElementById("congratsText");
+            const subEl = document.getElementById("congratsSubText");
+
+            if (percentage >= 80) {
+                badgeEl.textContent = "🎉🏆";
+                headingEl.textContent = "Outstanding Achievement!";
+                headingEl.style.color = "#16a34a";
+                subEl.textContent = "You demonstrated superior mastery across Full-Stack concepts.";
+            } else if (percentage >= 50) {
+                badgeEl.textContent = "👍👏";
+                headingEl.textContent = "Well Done! Good Performance!";
+                headingEl.style.color = "#4f46e5";
+                subEl.textContent = "Solid attempt! Keep reviewing missed topics to reach 90%+.";
+            } else {
+                badgeEl.textContent = "💪📚";
+                headingEl.textContent = "Good Practice! Keep Learning!";
+                headingEl.style.color = "#ea580c";
+                subEl.textContent = "Review your incorrect answers and retake to improve.";
+            }
+
+            document.getElementById("repTotal").textContent = questions.length;
+            document.getElementById("repTime").textContent = timeTakenStr;
+            document.getElementById("repCorrect").textContent = correctCount;
+            document.getElementById("repWrong").textContent = wrongCount;
+            document.getElementById("repPercentage").textContent = `${percentage}%`;
+            document.getElementById("repProgressBar").style.width = `${percentage}%`;
+
+            // SYNC INTO DASHBOARD HISTORY
+            let dashHistory = JSON.parse(localStorage.getItem("testHistory")) || [];
+            dashHistory.unshift({
+                testTitle: "Full Stack Mock Test #1",
+                totalScore: correctCount,
+                totalQuestions: questions.length,
+                date: "Today"
+            });
+            localStorage.setItem("testHistory", JSON.stringify(dashHistory));
+
+            // DISPLAY RESULT SCREEN
+            document.getElementById("quizScreen").style.display = "none";
+            document.getElementById("resultScreen").style.display = "block";
+        }
+
+        // Initialize Catalog and Quiz
+        renderTests();
+        renderQuestion();
+    </script>
+</body>
+</html>

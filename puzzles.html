@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Gym & IQ Logic Games - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .puzzle-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .app-container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* TABS STYLING */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .tab-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tab-btn.active {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+        }
+
+        .game-card {
+            display: none;
+        }
+
+        .game-card.active {
+            display: block;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .timer-badge {
+            color: #ef4444;
+            background: #fee2e2;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .primary-btn {
+            width: 100%;
+            background-color: #4f46e5;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background-color: #4338ca;
+        }
+
+        .primary-btn:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .option-btn {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .option-btn.selected {
+            border-color: #4f46e5;
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .explanation-box {
+            background-color: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #475569;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .word-display {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .color-btn {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .math-expr {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 20px 0;
+            text-align: center;
+            color: #1e293b;
+        }
+
+        .math-input {
+            width: 120px;
+            padding: 8px;
+            font-size: 20px;
+            text-align: center;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+        }
+
+        .memory-cell {
+            background: #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .memory-cell.active {
+            background: #4f46e5;
+        }
+
+        .memory-cell.correct {
+            background: #22c55e;
+        }
+
+        .memory-cell.wrong {
+            background: #ef4444;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html" class="active">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="puzzle-wrapper">
+        <div class="app-container">
+            <div class="header">
+                <h1>Mind Gym & IQ Test 🧠</h1>
+                <p>Select a module to sharpen your cognitive skills.</p>
+            </div>
+
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" data-target="pattern">Pattern IQ</button>
+                <button class="tab-btn" data-target="spatial">Spatial Logic</button>
+                <button class="tab-btn" data-target="stroop">Color Reflex</button>
+                <button class="tab-btn" data-target="math">Speed Math</button>
+                <button class="tab-btn" data-target="memory">Memory Grid</button>
+                <a href="sliding-puzzle.html" class="tab-btn" style="text-decoration:none; color:#4f46e5; border-color:#c7d2fe; background:#eef2ff;">🧩 Sliding Puzzle</a>
+            </div>
+
+        <!-- MODULE 1: PATTERN IQ -->
+        <div id="mod-pattern" class="game-card active">
+            <div class="stats-bar">
+                <span>Score: <strong id="patScore">0</strong></span>
+                <span class="timer-badge" id="patTimer">15s</span>
+            </div>
+            <div class="question-text" id="patQText">Loading...</div>
+            <div class="options-list" id="patOptions"></div>
+            <div class="explanation-box" id="patExplanation"></div>
+            <button class="primary-btn" id="patNextBtn" disabled>Submit Answer</button>
+        </div>
+
+        <!-- MODULE 2: SPATIAL LOGIC -->
+        <div id="mod-spatial" class="game-card">
+            <div class="stats-bar">
+                <span>Score: <strong id="spaScore">0</strong></span>
+                <span class="timer-badge" id="spaTimer">20s</span>
+            </div>
+            <div class="question-text" id="spaQText">Loading...</div>
+            <div class="options-list" id="spaOptions"></div>
+            <div class="explanation-box" id="spaExplanation"></div>
+            <button class="primary-btn" id="spaNextBtn" disabled>Submit Answer</button>
+        </div>
+
+        <!-- MODULE 3: STROOP COLOR REFLEX -->
+        <div id="mod-stroop" class="game-card">
+            <div class="stats-bar">
+                <span>Score: <strong id="strScore">0</strong></span>
+                <span class="timer-badge" id="strTimer">15s</span>
+            </div>
+            <p style="font-size: 12px; color: #64748b; text-align: center;">Click the button matching the <b>FONT COLOR</b>, not the text word!</p>
+            <div class="word-display" id="strWord">BLUE</div>
+            <div class="color-grid" id="strOptions"></div>
+            <button class="primary-btn" id="strStartBtn">Start Reflex Test</button>
+        </div>
+
+        <!-- MODULE 4: SPEED MATH -->
+        <div id="mod-math" class="game-card">
+            <div class="stats-bar">
+                <span>Score: <strong id="mathScore">0</strong></span>
+                <span class="timer-badge" id="mathTimer">20s</span>
+            </div>
+            <div class="math-expr" id="mathExpr">? + ?</div>
+            <input type="number" id="mathInput" class="math-input" placeholder="?" disabled>
+            <button class="primary-btn" id="mathStartBtn">Start Math Challenge</button>
+        </div>
+
+        <!-- MODULE 5: MEMORY MATRIX -->
+        <div id="mod-memory" class="game-card">
+            <div class="stats-bar">
+                <span>Score: <strong id="memScore">0</strong></span>
+                <span>Level: <strong id="memLevel">1</strong></span>
+            </div>
+            <div class="memory-grid" id="memoryGrid"></div>
+            <button class="primary-btn" id="memStartBtn">Start Memory Test</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // SOUND EFFECTS
+            let audioCtx = null;
+            function playSound(freq, type = 'sine', duration = 0.1) {
+                try {
+                    if (!audioCtx) {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = type;
+                    osc.frequency.value = freq;
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch (e) {
+                    console.log("Audio not supported or allowed yet");
+                }
+            }
+
+            // ROBUST TAB SWITCHING EVENT LISTENERS
+            const tabButtons = document.querySelectorAll(".tab-btn");
+            const gameCards = document.querySelectorAll(".game-card");
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const targetModule = e.currentTarget.getAttribute("data-target");
+
+                    // Hide all cards & deactivate tabs
+                    gameCards.forEach(card => card.classList.remove("active"));
+                    tabButtons.forEach(b => b.classList.remove("active"));
+
+                    // Activate selected card & tab
+                    const activeCard = document.getElementById(`mod-${targetModule}`);
+                    if (activeCard) {
+                        activeCard.classList.add("active");
+                        e.currentTarget.classList.add("active");
+                    }
+                });
+            });
+
+            /* MODULE 1: PATTERN IQ */
+            const patQuestions = [
+                { q: "Sequence: 2, 6, 12, 20, 30, ?", opts: ["36", "40", "42", "48"], ans: 2, time: 15, exp: "Increments increase by +2 (+4, +6, +8, +10, +12). 30 + 12 = 42." },
+                { q: "Sequence: 3, 5, 9, 17, 33, ?", opts: ["50", "65", "66", "68"], ans: 1, time: 20, exp: "Increments double each time (+2, +4, +8, +16, +32). 33 + 32 = 65." },
+                { q: "If 3+5=16, 4+6=20, 5+7=24, then 8+10=?", opts: ["32", "34", "36", "40"], ans: 2, time: 15, exp: "Rule: (A + B) * 2. So (8 + 10) * 2 = 36." }
+            ];
+            let patIdx = 0, patScore = 0, patSelected = null, patTimerVal = 0, patInterval = null;
+
+            function loadPatQuestion() {
+                if (patIdx >= patQuestions.length) {
+                    document.getElementById("patQText").textContent = `Pattern IQ Complete! Final Score: ${patScore}/${patQuestions.length}`;
+                    document.getElementById("patOptions").innerHTML = "";
+                    document.getElementById("patNextBtn").style.display = "none";
+                    return;
+                }
+                const q = patQuestions[patIdx];
+                document.getElementById("patQText").textContent = q.q;
+                document.getElementById("patExplanation").style.display = "none";
+                document.getElementById("patNextBtn").disabled = true;
+                patSelected = null;
+
+                const optsBox = document.getElementById("patOptions");
+                optsBox.innerHTML = "";
+                q.opts.forEach((opt, idx) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.textContent = opt;
+                    btn.onclick = () => {
+                        document.querySelectorAll("#patOptions .option-btn").forEach(b => b.classList.remove("selected"));
+                        btn.classList.add("selected");
+                        patSelected = idx;
+                        document.getElementById("patNextBtn").disabled = false;
+                    };
+                    optsBox.appendChild(btn);
+                });
+
+                clearInterval(patInterval);
+                patTimerVal = q.time;
+                document.getElementById("patTimer").textContent = `${patTimerVal}s`;
+                patInterval = setInterval(() => {
+                    patTimerVal--;
+                    document.getElementById("patTimer").textContent = `${patTimerVal}s`;
+                    if (patTimerVal <= 0) {
+                        clearInterval(patInterval);
+                        submitPatternAnswer(true);
+                    }
+                }, 1000);
+            }
+
+            function submitPatternAnswer(timeOut = false) {
+                clearInterval(patInterval);
+                const q = patQuestions[patIdx];
+                if (!timeOut && patSelected === q.ans) {
+                    patScore++;
+                    playSound(600, 'sine', 0.1);
+                    document.getElementById("patScore").textContent = patScore;
+                } else {
+                    playSound(200, 'sawtooth', 0.2);
+                }
+                document.getElementById("patExplanation").textContent = q.exp;
+                document.getElementById("patExplanation").style.display = "block";
+                patIdx++;
+                setTimeout(loadPatQuestion, 2000);
+            }
+
+            document.getElementById("patNextBtn").addEventListener("click", () => submitPatternAnswer(false));
+
+            /* MODULE 2: SPATIAL LOGIC */
+            const spaQuestions = [
+                { q: "Facing North-East, turn 180° clockwise then 90° anti-clockwise. Which direction are you facing?", opts: ["South-East", "South-West", "North-West", "North-East"], ans: 0, time: 20, exp: "NE + 180° = SW. SW - 90° (anti-clockwise) = South-East." },
+                { q: "A clock reads 3:15. If minute hand points East, where does hour hand point?", opts: ["North", "East (slight South)", "West", "South"], ans: 1, time: 15, exp: "At 3:15, both hands point towards East." }
+            ];
+            let spaIdx = 0, spaScore = 0, spaSelected = null, spaTimerVal = 0, spaInterval = null;
+
+            function loadSpaQuestion() {
+                if (spaIdx >= spaQuestions.length) {
+                    document.getElementById("spaQText").textContent = `Spatial Logic Complete! Final Score: ${spaScore}/${spaQuestions.length}`;
+                    document.getElementById("spaOptions").innerHTML = "";
+                    document.getElementById("spaNextBtn").style.display = "none";
+                    return;
+                }
+                const q = spaQuestions[spaIdx];
+                document.getElementById("spaQText").textContent = q.q;
+                document.getElementById("spaExplanation").style.display = "none";
+                document.getElementById("spaNextBtn").disabled = true;
+                spaSelected = null;
+
+                const optsBox = document.getElementById("spaOptions");
+                optsBox.innerHTML = "";
+                q.opts.forEach((opt, idx) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.textContent = opt;
+                    btn.onclick = () => {
+                        document.querySelectorAll("#spaOptions .option-btn").forEach(b => b.classList.remove("selected"));
+                        btn.classList.add("selected");
+                        spaSelected = idx;
+                        document.getElementById("spaNextBtn").disabled = false;
+                    };
+                    optsBox.appendChild(btn);
+                });
+
+                clearInterval(spaInterval);
+                spaTimerVal = q.time;
+                document.getElementById("spaTimer").textContent = `${spaTimerVal}s`;
+                spaInterval = setInterval(() => {
+                    spaTimerVal--;
+                    document.getElementById("spaTimer").textContent = `${spaTimerVal}s`;
+                    if (spaTimerVal <= 0) {
+                        clearInterval(spaInterval);
+                        submitSpatialAnswer(true);
+                    }
+                }, 1000);
+            }
+
+            function submitSpatialAnswer(timeOut = false) {
+                clearInterval(spaInterval);
+                const q = spaQuestions[spaIdx];
+                if (!timeOut && spaSelected === q.ans) {
+                    spaScore++;
+                    playSound(600, 'sine', 0.1);
+                    document.getElementById("spaScore").textContent = spaScore;
+                } else {
+                    playSound(200, 'sawtooth', 0.2);
+                }
+                document.getElementById("spaExplanation").textContent = q.exp;
+                document.getElementById("spaExplanation").style.display = "block";
+                spaIdx++;
+                setTimeout(loadSpaQuestion, 2000);
+            }
+
+            document.getElementById("spaNextBtn").addEventListener("click", () => submitSpatialAnswer(false));
+
+            /* MODULE 3: STROOP COLOR TEST */
+            const colors = [
+                { name: "RED", val: "#ef4444" },
+                { name: "BLUE", val: "#3b82f6" },
+                { name: "GREEN", val: "#22c55e" },
+                { name: "YELLOW", val: "#eab308" }
+            ];
+            let strScore = 0, strTimerVal = 15, strInterval = null, targetColor = "";
+
+            function startStroopGame() {
+                strScore = 0; strTimerVal = 15;
+                document.getElementById("strScore").textContent = strScore;
+                document.getElementById("strTimer").textContent = `${strTimerVal}s`;
+
+                clearInterval(strInterval);
+                strInterval = setInterval(() => {
+                    strTimerVal--;
+                    document.getElementById("strTimer").textContent = `${strTimerVal}s`;
+                    if (strTimerVal <= 0) {
+                        clearInterval(strInterval);
+                        alert(`Time Up! Reflex Score: ${strScore}`);
+                    }
+                }, 1000);
+
+                nextStroopRound();
+            }
+
+            function nextStroopRound() {
+                const wordObj = colors[Math.floor(Math.random() * colors.length)];
+                const colorObj = colors[Math.floor(Math.random() * colors.length)];
+
+                const wordEl = document.getElementById("strWord");
+                wordEl.textContent = wordObj.name;
+                wordEl.style.color = colorObj.val;
+                targetColor = colorObj.name;
+
+                const grid = document.getElementById("strOptions");
+                grid.innerHTML = "";
+                colors.forEach(c => {
+                    const btn = document.createElement("button");
+                    btn.className = "color-btn";
+                    btn.textContent = c.name;
+                    btn.onclick = () => {
+                        if (c.name === targetColor) {
+                            strScore += 5;
+                            playSound(500, 'sine', 0.08);
+                            document.getElementById("strScore").textContent = strScore;
+                        } else {
+                            playSound(180, 'sawtooth', 0.15);
+                        }
+                        nextStroopRound();
+                    };
+                    grid.appendChild(btn);
+                });
+            }
+
+            document.getElementById("strStartBtn").addEventListener("click", startStroopGame);
+
+            /* MODULE 4: SPEED MATH */
+            let mathScore = 0, mathTimerVal = 20, mathInterval = null, currentMathAns = 0;
+
+            function startMathGame() {
+                mathScore = 0; mathTimerVal = 20;
+                document.getElementById("mathScore").textContent = mathScore;
+                document.getElementById("mathTimer").textContent = `${mathTimerVal}s`;
+
+                const input = document.getElementById("mathInput");
+                input.disabled = false; input.focus();
+
+                clearInterval(mathInterval);
+                mathInterval = setInterval(() => {
+                    mathTimerVal--;
+                    document.getElementById("mathTimer").textContent = `${mathTimerVal}s`;
+                    if (mathTimerVal <= 0) {
+                        clearInterval(mathInterval);
+                        input.disabled = true;
+                        alert(`Time Up! Math Score: ${mathScore}`);
+                    }
+                }, 1000);
+
+                nextMathExpr();
+            }
+
+            function nextMathExpr() {
+                const n1 = Math.floor(Math.random() * 15) + 1;
+                const n2 = Math.floor(Math.random() * 15) + 1;
+                const ops = ['+', '-', '*'];
+                const op = ops[Math.floor(Math.random() * ops.length)];
+
+                if (op === '+') currentMathAns = n1 + n2;
+                else if (op === '-') currentMathAns = n1 - n2;
+                else if (op === '*') currentMathAns = n1 * n2;
+
+                document.getElementById("mathExpr").textContent = `${n1} ${op} ${n2} = ?`;
+                document.getElementById("mathInput").value = "";
+            }
+
+            document.getElementById("mathInput").addEventListener("input", (e) => {
+                if (parseInt(e.target.value) === currentMathAns) {
+                    mathScore++;
+                    playSound(700, 'sine', 0.1);
+                    document.getElementById("mathScore").textContent = mathScore;
+                    nextMathExpr();
+                }
+            });
+
+            document.getElementById("mathStartBtn").addEventListener("click", startMathGame);
+
+            /* MODULE 5: MEMORY MATRIX */
+            let memPattern = [], memUserPattern = [];
+            let memScore = 0, memLevel = 1, memClickable = false;
+
+            function initMemoryGrid() {
+                const grid = document.getElementById("memoryGrid");
+                grid.innerHTML = "";
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement("div");
+                    cell.className = "memory-cell";
+                    cell.onclick = () => handleMemoryCellClick(i, cell);
+                    grid.appendChild(cell);
+                }
+            }
+
+            function startMemoryGame() {
+                memScore = 0; memLevel = 1;
+                document.getElementById("memScore").textContent = memScore;
+                document.getElementById("memLevel").textContent = memLevel;
+                nextMemoryRound();
+            }
+
+            function nextMemoryRound() {
+                memUserPattern = []; memPattern = []; memClickable = false;
+                initMemoryGrid();
+
+                const count = Math.min(3 + Math.floor(memLevel / 2), 6);
+                while (memPattern.length < count) {
+                    let rand = Math.floor(Math.random() * 9);
+                    if (!memPattern.includes(rand)) memPattern.push(rand);
+                }
+
+                setTimeout(() => {
+                    memPattern.forEach(idx => {
+                        document.querySelectorAll(".memory-cell")[idx].classList.add("active");
+                    });
+
+                    setTimeout(() => {
+                        document.querySelectorAll(".memory-cell").forEach(c => c.classList.remove("active"));
+                        memClickable = true;
+                    }, 1000);
+                }, 400);
+            }
+
+            function handleMemoryCellClick(index, cell) {
+                if (!memClickable || memUserPattern.includes(index)) return;
+                memUserPattern.push(index);
+
+                if (memPattern.includes(index)) {
+                    cell.classList.add("correct");
+                    playSound(550, 'sine', 0.08);
+                    if (memUserPattern.length === memPattern.length) {
+                        memScore += 10; memLevel++;
+                        document.getElementById("memScore").textContent = memScore;
+                        document.getElementById("memLevel").textContent = memLevel;
+                        setTimeout(nextMemoryRound, 800);
+                    }
+                } else {
+                    cell.classList.add("wrong");
+                    playSound(150, 'sawtooth', 0.2);
+                    memClickable = false;
+                    alert(`Game Over! Memory Score: ${memScore}`);
+                }
+            }
+
+            document.getElementById("memStartBtn").addEventListener("click", startMemoryGame);
+
+            // INITIALIZE DEFAULTS
+            loadPatQuestion();
+            loadSpaQuestion();
+            initMemoryGrid();
+        });
+
+        // User session handling
+        const storedEmail = localStorage.getItem("studentEmail") || "student@gmail.com";
+        document.getElementById("userEmailDisplay").textContent = storedEmail;
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+    </script>
+        </div>
+    </div>
+</body>
+</html>

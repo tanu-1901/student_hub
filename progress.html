@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Progress & Detailed Performance Report - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-page-wrapper {
+            flex: 1;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 980px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        /* STUDENT SELECTOR BAR */
+        .student-selector-bar {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .profile-details h2 {
+            font-size: 18px;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .profile-details p {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .selector-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            outline: none;
+            cursor: pointer;
+            background-color: #f8fafc;
+        }
+
+        .add-btn {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .add-btn:hover {
+            background-color: #4338ca;
+        }
+
+        /* METRICS CARDS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #4f46e5;
+        }
+
+        .card-value.correct-val { color: #16a34a; }
+        .card-value.wrong-val { color: #dc2626; }
+
+        /* SECTION LAYOUT */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* TABLE STYLES */
+        .table-container {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            overflow-x: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            padding: 12px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 11px;
+            display: inline-block;
+        }
+
+        .badge-pass {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-fail {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* SUBJECT PERFORMANCE PROGRESS BARS */
+        .subject-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-group {
+            margin-bottom: 16px;
+        }
+
+        .progress-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #4f46e5;
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html" class="active">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="progress-page-wrapper">
+        <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Student Performance Portal 📊</h1>
+            <p>Track student test attempts, solve time, accuracy, and wrong/right answers.</p>
+        </div>
+
+        <!-- STUDENT SELECTOR & PROFILE CARD -->
+        <div class="student-selector-bar">
+            <div class="profile-info">
+                <div class="avatar" id="studentAvatar">TS</div>
+                <div class="profile-details">
+                    <h2 id="studentName">Tanu Singh</h2>
+                    <p id="studentId">Student ID: STU-101</p>
+                </div>
+            </div>
+
+            <div class="selector-controls">
+                <select id="studentSelect">
+                    <!-- Dynamic Options -->
+                </select>
+                <button class="add-btn" id="addStudentBtn">+ Add Student</button>
+            </div>
+        </div>
+
+        <!-- OVERVIEW STATS CARDS -->
+        <div class="stats-grid">
+            <div class="card">
+                <div class="card-title">Mock Tests Given</div>
+                <div class="card-value" id="totalTests">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Total Questions</div>
+                <div class="card-value" id="totalAttempted">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Correct Answers</div>
+                <div class="card-value correct-val" id="totalCorrect">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Wrong Answers</div>
+                <div class="card-value wrong-val" id="totalWrong">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Time Spent</div>
+                <div class="card-value" id="totalTime">0m</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Overall Accuracy</div>
+                <div class="card-value" id="accuracy">0%</div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="content-grid">
+            <!-- TEST HISTORY TABLE -->
+            <div>
+                <h2 class="section-title">Detailed Mock Test History</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test Name</th>
+                                <th>Date</th>
+                                <th>Questions</th>
+                                <th>Correct</th>
+                                <th>Wrong</th>
+                                <th>Time Taken</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Dynamic Data Rows Will Be Rendered Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SUBJECT ACCURACY BREAKDOWN -->
+            <div>
+                <h2 class="section-title">Subject Mastery Breakdown</h2>
+                <div class="subject-card">
+                    <div class="progress-group">
+                        <div class="progress-label">
+                            <span>Frontend Development</span>
+                            <span id="frontendAcc">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="frontendBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-group">
+                        <div class="progress-label">
+                            <span>Backend Systems</span>
+                            <span id="backendAcc">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="backendBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-group">
+                        <div class="progress-label">
+                            <span>Pattern & Logic IQ</span>
+                            <span id="iqAcc">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="iqBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-group">
+                        <div class="progress-label">
+                            <span>Mind Gym Reflex</span>
+                            <span id="speedAcc">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="speedBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // STUDENTS DATABASE
+            const initialStudents = [
+                {
+                    id: "STU-101",
+                    name: "Tanu Singh",
+                    subjectAcc: { fe: 85, be: 70, iq: 90, speed: 78 },
+                    history: [
+                        { testName: "Pattern & Logic IQ", date: "2026-04-12", totalQ: 10, correct: 9, wrong: 1, timeTaken: "3m 45s", percentage: 90 },
+                        { testName: "Speed Math & Logic IQ", date: "2026-04-14", totalQ: 10, correct: 8, wrong: 2, timeTaken: "4m 10s", percentage: 80 },
+                        { testName: "Full Stack Mock Test #1", date: "2026-04-15", totalQ: 10, correct: 8, wrong: 2, timeTaken: "5m 20s", percentage: 80 }
+                    ]
+                },
+                {
+                    id: "STU-102",
+                    name: "Rahul Sharma",
+                    subjectAcc: { fe: 60, be: 65, iq: 70, speed: 60 },
+                    history: [
+                        { testName: "React & Node.js Test", date: "2026-04-10", totalQ: 10, correct: 5, wrong: 5, timeTaken: "6m 10s", percentage: 50 },
+                        { testName: "Mind Gym Reflex Test", date: "2026-04-13", totalQ: 10, correct: 6, wrong: 4, timeTaken: "4m 00s", percentage: 60 }
+                    ]
+                },
+                {
+                    id: "STU-103",
+                    name: "Priya Verma",
+                    subjectAcc: { fe: 92, be: 88, iq: 95, speed: 90 },
+                    history: [
+                        { testName: "Mind Gym Reflex Test", date: "2026-04-11", totalQ: 10, correct: 10, wrong: 0, timeTaken: "2m 30s", percentage: 100 },
+                        { testName: "Speed Math & Logic IQ", date: "2026-04-14", totalQ: 10, correct: 9, wrong: 1, timeTaken: "3m 15s", percentage: 90 }
+                    ]
+                }
+            ];
+
+            let studentsList = JSON.parse(localStorage.getItem("allStudentsProgressData")) || initialStudents;
+            let currentStudentIndex = 0;
+
+            const selectEl = document.getElementById("studentSelect");
+
+            function populateDropdown() {
+                selectEl.innerHTML = "";
+                studentsList.forEach((s, idx) => {
+                    const opt = document.createElement("option");
+                    opt.value = idx;
+                    opt.textContent = `${s.name} (${s.id})`;
+                    selectEl.appendChild(opt);
+                });
+                selectEl.value = currentStudentIndex;
+            }
+
+            function loadStudentReport(student) {
+                // Update Profile Info
+                document.getElementById("studentName").textContent = student.name;
+                document.getElementById("studentId").textContent = `Student ID: ${student.id}`;
+                
+                const initials = student.name.split(" ").map(n => n[0]).join("").toUpperCase();
+                document.getElementById("studentAvatar").textContent = initials;
+
+                // Calculate Stats
+                let totalQ = 0, totalC = 0, totalW = 0, totalSecs = 0;
+
+                student.history.forEach(item => {
+                    totalQ += item.totalQ;
+                    totalC += item.correct;
+                    totalW += item.wrong;
+
+                    if (item.timeTaken) {
+                        const minsMatch = item.timeTaken.match(/(\d+)m/);
+                        const secsMatch = item.timeTaken.match(/(\d+)s/);
+                        const mins = minsMatch ? parseInt(minsMatch[1]) : 0;
+                        const secs = secsMatch ? parseInt(secsMatch[1]) : 0;
+                        totalSecs += (mins * 60) + secs;
+                    }
+                });
+
+                const totalMins = Math.round(totalSecs / 60);
+                const overallAccuracy = totalQ > 0 ? Math.round((totalC / totalQ) * 100) : 0;
+
+                // Update Overview Cards
+                document.getElementById("totalTests").textContent = student.history.length;
+                document.getElementById("totalAttempted").textContent = totalQ;
+                document.getElementById("totalCorrect").textContent = totalC;
+                document.getElementById("totalWrong").textContent = totalW;
+                document.getElementById("totalTime").textContent = `${totalMins}m`;
+                document.getElementById("accuracy").textContent = `${overallAccuracy}%`;
+
+                // Render Table
+                const tbody = document.getElementById("historyTableBody");
+                tbody.innerHTML = "";
+
+                student.history.forEach(item => {
+                    const row = document.createElement("tr");
+                    const isPassed = item.percentage >= 60;
+                    const badgeClass = isPassed ? "badge-pass" : "badge-fail";
+                    const statusText = isPassed ? "Passed" : "Needs Practice";
+
+                    row.innerHTML = `
+                        <td><strong>${item.testName}</strong></td>
+                        <td>${item.date}</td>
+                        <td>${item.totalQ}</td>
+                        <td style="color: #16a34a; font-weight: 700;">${item.correct}</td>
+                        <td style="color: #dc2626; font-weight: 700;">${item.wrong}</td>
+                        <td>${item.timeTaken || "N/A"}</td>
+                        <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Update Subject Mastery Bars
+                const sub = student.subjectAcc || { fe: 0, be: 0, iq: 0, speed: 0 };
+                document.getElementById("frontendAcc").textContent = `${sub.fe}%`;
+                document.getElementById("frontendBar").style.width = `${sub.fe}%`;
+
+                document.getElementById("backendAcc").textContent = `${sub.be}%`;
+                document.getElementById("backendBar").style.width = `${sub.be}%`;
+
+                document.getElementById("iqAcc").textContent = `${sub.iq}%`;
+                document.getElementById("iqBar").style.width = `${sub.iq}%`;
+
+                document.getElementById("speedAcc").textContent = `${sub.speed}%`;
+                document.getElementById("speedBar").style.width = `${sub.speed}%`;
+            }
+
+            selectEl.addEventListener("change", (e) => {
+                currentStudentIndex = parseInt(e.target.value);
+                loadStudentReport(studentsList[currentStudentIndex]);
+            });
+
+            // Add New Student Button Handler
+            document.getElementById("addStudentBtn").addEventListener("click", () => {
+                const name = prompt("Enter Student Full Name:");
+                if (name && name.trim() !== "") {
+                    const newId = `STU-${100 + studentsList.length + 1}`;
+                    const newStudent = {
+                        id: newId,
+                        name: name.trim(),
+                        subjectAcc: { fe: 0, be: 0, iq: 0, speed: 0 },
+                        history: []
+                    };
+                    studentsList.push(newStudent);
+                    localStorage.setItem("allStudentsProgressData", JSON.stringify(studentsList));
+                    currentStudentIndex = studentsList.length - 1;
+                    populateDropdown();
+                    loadStudentReport(studentsList[currentStudentIndex]);
+                }
+            });
+
+            // Initial Load
+            populateDropdown();
+            loadStudentReport(studentsList[0]);
+        });
+
+        // User session handling
+        const storedEmail = localStorage.getItem("studentEmail") || "student@gmail.com";
+        document.getElementById("userEmailDisplay").textContent = storedEmail;
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+    </script>
+        </div>
+    </div>
+</body>
+</html>

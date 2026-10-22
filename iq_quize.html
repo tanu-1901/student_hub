@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed IQ & Logic Test (10 Questions) - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iq-quiz-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .quiz-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .question-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .timer-badge {
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #334155;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .option-btn.selected {
+            border-color: #4f46e5;
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .action-btn {
+            width: 100%;
+            background-color: #4f46e5;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #4338ca;
+        }
+
+        .action-btn:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .result-screen {
+            text-align: center;
+        }
+
+        .score-box {
+            font-size: 36px;
+            font-weight: 800;
+            color: #4f46e5;
+            margin: 16px 0;
+        }
+
+        .review-list {
+            text-align: left;
+            margin-top: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .review-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="iq-quiz-wrapper">
+        <div class="quiz-card" id="quizContainer">
+            <div class="header">
+            <span class="question-number" id="qNumber">Question 1/10</span>
+            <span class="timer-badge" id="timer">Time Left: 20s</span>
+        </div>
+
+        <div class="question-text" id="qText">Loading question...</div>
+
+        <div class="options-grid" id="optionsContainer"></div>
+
+        <button class="action-btn" id="nextBtn" disabled>Submit Answer</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "If you face North-East, turn 180° clockwise, and then turn 90° anti-clockwise, which direction are you facing?",
+                options: ["South-East", "South-West", "North-West", "North-East"],
+                answer: 0,
+                timeLimit: 20,
+                explanation: "NE + 180° = SW. SW - 90° (anti-clockwise) = South-East."
+            },
+            {
+                question: "In a code, SMART is written as TNBUS. How is BRAIN written in that code?",
+                options: ["CSBJO", "CSBJM", "AQZHM", "CSCJO"],
+                answer: 0,
+                timeLimit: 15,
+                explanation: "Shift each letter by +1: B->C, R->S, A->B, I->J, N->O."
+            },
+            {
+                question: "Find the missing number: 3 -> 9, 4 -> 16, 5 -> 25, 6 -> 36, 7 -> ?",
+                options: ["42", "47", "49", "56"],
+                answer: 2,
+                timeLimit: 15,
+                explanation: "Square of the number: 7 * 7 = 49."
+            },
+            {
+                question: "A father's age is 3 times his son's age. If the sum of their ages is 48 years, how old is the son?",
+                options: ["10 years", "12 years", "14 years", "16 years"],
+                answer: 1,
+                timeLimit: 20,
+                explanation: "x + 3x = 48 => 4x = 48 => x = 12 years."
+            },
+            {
+                question: "Which of the following is the 'Odd One Out'?",
+                options: ["Mercury", "Venus", "Moon", "Mars"],
+                answer: 2,
+                timeLimit: 10,
+                explanation: "Moon is a natural satellite, whereas the rest are planets."
+            },
+            {
+                question: "Find the missing number in the sequence: 3, 5, 9, 17, 33, ?",
+                options: ["50", "65", "66", "68"],
+                answer: 1,
+                timeLimit: 20,
+                explanation: "Increments double each step (+2, +4, +8, +16, +32). 33 + 32 = 65."
+            },
+            {
+                question: "If 2 x 3 = 12, 3 x 4 = 24, and 4 x 5 = 40, then 5 x 6 = ?",
+                options: ["30", "50", "60", "70"],
+                answer: 2,
+                timeLimit: 15,
+                explanation: "Formula: (A * B) * 2. So, (5 * 6) * 2 = 60."
+            },
+            {
+                question: "A clock reads 3:15. If the minute hand points East, which direction does the hour hand point?",
+                options: ["North", "East (slight South-East)", "West", "South"],
+                answer: 1,
+                timeLimit: 15,
+                explanation: "At 3:15, both hands point towards the East."
+            },
+            {
+                question: "Solve using BODMAS: 10 + 10 x 0 + 10 = ?",
+                options: ["0", "10", "20", "100"],
+                answer: 2,
+                timeLimit: 15,
+                explanation: "Multiply first: 10 x 0 = 0. Then add: 10 + 0 + 10 = 20."
+            },
+            {
+                question: "Pointing to a photo, Raman said: 'He is the son of my father's only son.' Who is in the photo?",
+                options: ["Raman's brother", "Raman's son", "Raman's father", "Raman himself"],
+                answer: 1,
+                timeLimit: 20,
+                explanation: "'Father's only son' = Raman. His son is in the photo."
+            }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let selectedOption = null;
+        let timeLeft = 0;
+        let timerInterval = null;
+
+        const qNumberEl = document.getElementById("qNumber");
+        const timerEl = document.getElementById("timer");
+        const qTextEl = document.getElementById("qText");
+        const optionsContainer = document.getElementById("optionsContainer");
+        const nextBtn = document.getElementById("nextBtn");
+        const quizContainer = document.getElementById("quizContainer");
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = questions[currentIdx].timeLimit;
+            timerEl.textContent = `Time Left: ${timeLeft}s`;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleAnswerSubmit(true);
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const currentQ = questions[currentIdx];
+            qNumberEl.textContent = `Question ${currentIdx + 1}/${questions.length}`;
+            qTextEl.textContent = currentQ.question;
+            optionsContainer.innerHTML = "";
+            selectedOption = null;
+            nextBtn.disabled = true;
+
+            currentQ.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.textContent = opt;
+                btn.addEventListener("click", () => selectOption(index, btn));
+                optionsContainer.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function selectOption(index, btnEl) {
+            document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+            btnEl.classList.add("selected");
+            selectedOption = index;
+            nextBtn.disabled = false;
+        }
+
+        function handleAnswerSubmit(timeOut = false) {
+            clearInterval(timerInterval);
+
+            if (!timeOut && selectedOption === questions[currentIdx].answer) {
+                score++;
+            }
+
+            currentIdx++;
+
+            if (currentIdx < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const total = questions.length;
+            const percentage = (score / total) * 100;
+            let rating = percentage >= 80 ? "Superior Logic IQ 🧠⚡" : percentage >= 50 ? "Average Speed IQ 👍" : "Practice Needed 📚";
+
+            let reviewHTML = questions.map((q, idx) => `
+                <div class="review-item">
+                    <strong>Q${idx + 1}:</strong> ${q.question}<br>
+                    <span style="color: #16a34a;"><strong>Answer:</strong> ${q.options[q.answer]}</span><br>
+                    <small style="color: #64748b;">${q.explanation}</small>
+                </div>
+            `).join("");
+
+            // SYNC INTO DASHBOARD HISTORY
+            let dashHistory = JSON.parse(localStorage.getItem("testHistory")) || [];
+            dashHistory.unshift({
+                testTitle: "Speed IQ & Logic Test (10 Qs)",
+                totalScore: score,
+                totalQuestions: total,
+                date: "Today"
+            });
+            localStorage.setItem("testHistory", JSON.stringify(dashHistory));
+
+            quizContainer.innerHTML = `
+                <div class="result-screen">
+                    <h2>Test Completed! 🎉</h2>
+                    <div class="score-box">${score} / ${total}</div>
+                    <p style="font-weight: 600; color: #475569;">Rating: ${rating}</p>
+                    
+                    <div class="review-list">
+                        ${reviewHTML}
+                    </div>
+                    <br>
+                    <div style="display:flex; gap:10px; justify-content:center;">
+                        <button class="action-btn" onclick="location.reload()">Retake Test</button>
+                        <a href="dashboard.html" class="action-btn" style="text-decoration:none; background:#22c55e; display:flex; align-items:center; justify-content:center;">Back to Dashboard</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        nextBtn.addEventListener("click", () => handleAnswerSubmit(false));
+
+        // Start Quiz
+        loadQuestion();
+
+        // User session handling
+        const storedEmail = localStorage.getItem("studentEmail") || "student@gmail.com";
+        document.getElementById("userEmailDisplay").textContent = storedEmail;
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+    </script>
+        </div>
+    </div>
+</body>
+</html>

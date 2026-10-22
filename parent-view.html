@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Portal View - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .parent-container {
+            max-width: 980px;
+            margin: 24px auto;
+            padding: 0 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* HEADER CARD */
+        .parent-header-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.35);
+        }
+
+        .student-profile-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar-large {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            color: #4f46e5;
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #c7d2fe;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .student-details h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .student-details p {
+            font-size: 13px;
+            color: #e0e7ff;
+        }
+
+        .action-btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .download-btn {
+            background-color: #ffffff;
+            color: #4f46e5;
+        }
+
+        .download-btn:hover {
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .send-btn {
+            background-color: #22c55e;
+            color: #ffffff;
+        }
+
+        .send-btn:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        /* WEEKLY DAY SELECTOR */
+        .day-selector-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .day-selector-card h3 {
+            font-size: 16px;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .day-selector-card p {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        .streak-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .day-box {
+            flex: 1;
+            min-width: 75px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .day-box:hover {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .day-box.selected {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .day-box .hours-tag {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 5px;
+            display: block;
+            opacity: 0.9;
+        }
+
+        /* DAY DETAILS PANEL */
+        .day-details-panel {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-left: 5px solid #4f46e5;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-item .lbl {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .detail-item .val {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-top: 2px;
+        }
+
+        /* GRID LAYOUT FOR DETAILS */
+        .parent-details-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .parent-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .info-box h3 {
+            font-size: 16px;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .feedback-item {
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feedback-strength {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            color: #15803d;
+        }
+
+        .feedback-improvement {
+            background-color: #fff7ed;
+            border-left: 4px solid #f97316;
+            color: #c2410c;
+        }
+
+        /* PRINT STYLING FOR PDF */
+        @media print {
+            .navbar, .action-btn-group {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+            }
+            .parent-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .parent-header-card {
+                background: #4f46e5 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html" class="active">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="parent-container" id="printableReport">
+        <!-- STUDENT PROFILE HEADER -->
+        <div class="parent-header-card">
+            <div class="student-profile-summary">
+                <div class="avatar-large" id="parentAvatar">TS</div>
+                <div class="student-details">
+                    <h2 id="parentStudentName">Tanu Singh</h2>
+                    <p id="parentStudentMeta">Class: 12th Standard • Roll No: STU-101 • Section: A</p>
+                    <p style="margin-top: 4px; font-size: 12px; opacity: 0.9;">Parent Portal View • Live Academic Status</p>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS: DOWNLOAD PDF & SEND REPORT -->
+            <div class="action-btn-group">
+                <button class="action-btn send-btn" onclick="shareReportToParent()">📲 Share Report via WhatsApp</button>
+                <button class="action-btn download-btn" onclick="downloadPDFReport()">📄 Download PDF Report</button>
+            </div>
+        </div>
+
+        <!-- DAY-BY-DAY 7-DAY STUDY CHECKER -->
+        <div class="day-selector-card">
+            <h3>📅 7-Day Practice & Study Breakdown</h3>
+            <p>Click on any day below to check study duration, mock tests completed, and accuracy:</p>
+
+            <div class="streak-container" id="daySelectorContainer">
+                <!-- Days populated via JavaScript -->
+            </div>
+
+            <!-- SELECTED DAY DETAILS DISPLAY PANEL -->
+            <div class="day-details-panel" id="dayDetailsPanel">
+                <div class="detail-item">
+                    <div class="lbl">Selected Day</div>
+                    <div class="val" id="dayNameVal">Monday</div>
+                </div>
+                <div class="detail-item">
+                    <div class="lbl">Study Time</div>
+                    <div class="val" id="dayTimeVal">2.5 hrs</div>
+                </div>
+                <div class="detail-item">
+                    <div class="lbl">Tests / Puzzles Given</div>
+                    <div class="val" id="dayTestsVal">3 Attempted</div>
+                </div>
+                <div class="detail-item">
+                    <div class="lbl">Day Accuracy</div>
+                    <div class="val" id="dayAccVal" style="color: #16a34a;">92%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACADEMIC FEEDBACK & CURRICULUM HEALTH -->
+        <div class="parent-details-grid">
+            <div class="info-box">
+                <h3>🤖 AI Academic Counselor Insights for Parents</h3>
+                
+                <div class="feedback-item feedback-strength">
+                    <strong>🌟 Key Strength: High Reasoning & Logic Aptitude</strong><br>
+                    Tanu shows exceptional problem-solving speed in the Mind Gym and Full Stack Mock Tests, consistently answering JavaScript logic questions with 90%+ accuracy.
+                </div>
+
+                <div class="feedback-item feedback-strength">
+                    <strong>⏰ Punctual & Consistent Study Routine</strong><br>
+                    Maintained a continuous 5-day active study streak with an average of 2.1 hours spent per session.
+                </div>
+
+                <div class="feedback-item feedback-improvement">
+                    <strong>📌 Suggested Improvement Area: Database & Asynchronous Workflows</strong><br>
+                    Occasional hesitation observed in SQL queries and Node.js backend questions. Encouraging 15 minutes of daily practice on Practice Papers is recommended.
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>📊 Subject Mastery Status</h3>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                        <span>Frontend Engineering</span>
+                        <span style="color: #16a34a;">94% (Mastered)</span>
+                    </div>
+                    <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div style="width: 94%; height: 100%; background: #22c55e;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                        <span>Backend & Databases</span>
+                        <span style="color: #4f46e5;">78% (Good)</span>
+                    </div>
+                    <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div style="width: 78%; height: 100%; background: #4f46e5;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                        <span>Cognitive IQ & Mind Gym</span>
+                        <span style="color: #8b5cf6;">90% (Excellent)</span>
+                    </div>
+                    <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div style="width: 90%; height: 100%; background: #8b5cf6;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1; font-size: 12px; color: #64748b;">
+                    💡 <b>Parent Note:</b> Data automatically updates each time your child completes a test or cognitive puzzle.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check session
+        const storedEmail = localStorage.getItem("studentEmail") || "student@gmail.com";
+        const storedName = localStorage.getItem("studentName") || "Tanu Singh";
+        document.getElementById("userEmailDisplay").textContent = storedEmail;
+        document.getElementById("parentStudentName").textContent = storedName;
+
+        const initials = storedName.split(" ").map(w => w[0]).join("").toUpperCase();
+        document.getElementById("parentAvatar").textContent = initials || "TS";
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+
+        // 7-DAY PRACTICE DATA
+        const weeklyData = [
+            { day: "Mon", fullDay: "Monday", time: "2.5 hrs", tests: "3 Attempted", accuracy: "92%" },
+            { day: "Tue", fullDay: "Tuesday", time: "1.8 hrs", tests: "2 Attempted", accuracy: "86%" },
+            { day: "Wed", fullDay: "Wednesday", time: "3.0 hrs", tests: "4 Attempted", accuracy: "95%" },
+            { day: "Thu", fullDay: "Thursday", time: "2.2 hrs", tests: "3 Attempted", accuracy: "89%" },
+            { day: "Fri", fullDay: "Friday", time: "2.8 hrs", tests: "4 Attempted", accuracy: "94%" },
+            { day: "Sat", fullDay: "Saturday", time: "1.2 hrs", tests: "1 Attempted", accuracy: "80%" },
+            { day: "Sun", fullDay: "Sunday (Today)", time: "1.5 hrs", tests: "2 Attempted", accuracy: "90%" }
+        ];
+
+        function renderDaySelector() {
+            const container = document.getElementById("daySelectorContainer");
+            container.innerHTML = "";
+
+            weeklyData.forEach((item, index) => {
+                const box = document.createElement("div");
+                box.className = `day-box ${index === weeklyData.length - 1 ? "selected" : ""}`;
+                box.innerHTML = `
+                    ${item.day}
+                    <span class="hours-tag">${item.time}</span>
+                `;
+
+                box.onclick = () => {
+                    document.querySelectorAll(".day-box").forEach(b => b.classList.remove("selected"));
+                    box.classList.add("selected");
+                    showDayDetails(item);
+                };
+
+                container.appendChild(box);
+            });
+
+            // Default show Sunday (last day)
+            showDayDetails(weeklyData[weeklyData.length - 1]);
+        }
+
+        function showDayDetails(data) {
+            document.getElementById("dayNameVal").textContent = data.fullDay;
+            document.getElementById("dayTimeVal").textContent = data.time;
+            document.getElementById("dayTestsVal").textContent = data.tests;
+            document.getElementById("dayAccVal").textContent = data.accuracy;
+        }
+
+        function downloadPDFReport() {
+            window.print();
+        }
+
+        function shareReportToParent() {
+            const studentName = document.getElementById("parentStudentName").textContent;
+            const message = `📊 StudentPro Progress Report for ${studentName}:\n- Weekly Study Time: 15.0 Hours\n- Total Tests/Puzzles: 19 Completed\n- Average Accuracy: 89%\nCheck live detailed report at StudentPro!`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `${studentName} Progress Report`,
+                    text: message,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", renderDaySelector);
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Papers - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/papers.css">
+</head>
+
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html" class="active">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <section class="dashboard">
+            <!-- TITLE SECTION -->
+            <div class="welcome-banner" style="margin-bottom: 25px;">
+                <div>
+                    <h1 style="font-size: 26px;">Fullstack Practice Papers 💻</h1>
+                    <p>Select any Frontend or Backend technology to launch an interactive timed test.</p>
+                </div>
+                <a href="mock-tests.html" class="primary-btn">Go to Mock Tests →</a>
+            </div>
+
+            <!-- SEARCH BAR -->
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Search papers by technology name...">
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filter-bar">
+                <button class="filter-btn active" data-subject="all">All Papers</button>
+                <button class="filter-btn" data-subject="html">HTML5</button>
+                <button class="filter-btn" data-subject="css">CSS3</button>
+                <button class="filter-btn" data-subject="js">JavaScript</button>
+                <button class="filter-btn" data-subject="react">React JS</button>
+                <button class="filter-btn" data-subject="node">Node.js</button>
+                <button class="filter-btn" data-subject="express">Express.js</button>
+                <button class="filter-btn" data-subject="mongodb">MongoDB</button>
+                <button class="filter-btn" data-subject="python">Python</button>
+            </div>
+
+            <!-- PAPERS GRID CONTAINER -->
+            <div class="papers-grid" id="papersGrid"></div>
+            <div id="noResults" class="no-results" style="display: none;">No matching papers found.</div>
+        </section>
+    </main>
+
+    <script>
+        // Check session
+        const storedEmail = localStorage.getItem("studentEmail") || "student@gmail.com";
+        document.getElementById("userEmailDisplay").textContent = storedEmail;
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+    </script>
+    <script src="js/papers.js"></script>
+</body>
+
+</html>

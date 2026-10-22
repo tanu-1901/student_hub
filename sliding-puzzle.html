@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Sliding Puzzle - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .puzzle-page-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .puzzle-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid #e2e8f0;
+        }
+
+        .puzzle-card h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .puzzle-card p.subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 8px;
+        }
+
+        select, input[type="file"] {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 13px;
+            background-color: #f8fafc;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .puzzle-board {
+            display: grid;
+            gap: 4px;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 16px auto;
+            background-color: #cbd5e1;
+            padding: 6px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tile {
+            background-color: #4f46e5;
+            color: #ffffff;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s ease;
+            background-size: 320px 320px;
+        }
+
+        .tile:hover {
+            opacity: 0.9;
+        }
+
+        .tile.empty {
+            background: transparent !important;
+            box-shadow: none;
+            cursor: default;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .game-btn {
+            flex: 1;
+            background-color: #4f46e5;
+            color: #ffffff;
+            border: none;
+            padding: 11px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .game-btn:hover {
+            background-color: #4338ca;
+        }
+
+        .game-btn.secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+        .game-btn.secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .high-score {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .win-message {
+            margin-top: 12px;
+            font-weight: 700;
+            color: #16a34a;
+            font-size: 15px;
+            min-height: 22px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html" class="active">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- PUZZLE CONTENT -->
+    <div class="puzzle-page-wrapper">
+        <div class="puzzle-card">
+            <h1>Sliding Puzzle Challenge 🧩</h1>
+            <p class="subtitle">Reorder the tiles sequentially to test your spatial memory & problem solving.</p>
+
+            <div class="controls">
+                <div>
+                    <label for="difficultySelect" style="font-size: 13px; font-weight: 600;">Size: </label>
+                    <select id="difficultySelect">
+                        <option value="3">3x3 (Easy)</option>
+                        <option value="4" selected>4x4 (Classic)</option>
+                        <option value="5">5x5 (Hard)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="modeSelect" style="font-size: 13px; font-weight: 600;">Mode: </label>
+                    <select id="modeSelect">
+                        <option value="numbers">Numbers</option>
+                        <option value="image">Image</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <span>Moves: <strong id="moveCount">0</strong></span>
+                <span>Time: <strong id="timer">00:00</strong></span>
+            </div>
+
+            <div class="puzzle-board" id="board"></div>
+
+            <div class="btn-container">
+                <button class="game-btn" id="restartBtn">Shuffle & Restart</button>
+                <a href="puzzles.html" class="game-btn secondary" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">More Puzzles 🧠</a>
+            </div>
+
+            <div class="win-message" id="winMessage"></div>
+            <div class="high-score" id="highScoreText">Best Record: --</div>
+        </div>
+    </div>
+
+    <script>
+        // Check session
+        const loggedInUser = localStorage.getItem("studentEmail") || "student@gmail.com";
+        document.getElementById("userEmailDisplay").textContent = loggedInUser;
+
+        function handleLogout() {
+            localStorage.removeItem("studentLoggedIn");
+            localStorage.removeItem("studentEmail");
+            window.location.href = "index.html";
+        }
+
+        const boardEl = document.getElementById("board");
+        const moveCountEl = document.getElementById("moveCount");
+        const timerEl = document.getElementById("timer");
+        const winMessageEl = document.getElementById("winMessage");
+        const restartBtn = document.getElementById("restartBtn");
+        const difficultySelect = document.getElementById("difficultySelect");
+        const modeSelect = document.getElementById("modeSelect");
+        const highScoreText = document.getElementById("highScoreText");
+
+        let gridSize = parseInt(difficultySelect.value);
+        let boardState = [];
+        let moves = 0;
+        let isSolved = false;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let imageUrl = "https://picsum.photos/320/320";
+
+        // Web Audio API for sound effects
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        
+        function playTone(freq, type, duration) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContextClass();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playMoveSound() { playTone(400, 'sine', 0.1); }
+        function playWinSound() { 
+            playTone(523.25, 'triangle', 0.2);
+            setTimeout(() => playTone(659.25, 'triangle', 0.2), 150);
+            setTimeout(() => playTone(783.99, 'triangle', 0.3), 300);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            secondsElapsed = 0;
+            timerEl.textContent = "00:00";
+            timerInterval = setInterval(() => {
+                if (!isSolved) {
+                    secondsElapsed++;
+                    const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                    const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+                    timerEl.textContent = `${mins}:${secs}`;
+                }
+            }, 1000);
+        }
+
+        function updateHighScoreDisplay() {
+            const bestMoves = localStorage.getItem(`best_moves_${gridSize}`);
+            const bestTime = localStorage.getItem(`best_time_${gridSize}`);
+            if (bestMoves && bestTime) {
+                highScoreText.textContent = `Best Record (${gridSize}x${gridSize}): ${bestMoves} moves in ${bestTime}s`;
+            } else {
+                highScoreText.textContent = `Best Record (${gridSize}x${gridSize}): None yet`;
+            }
+        }
+
+        function initGame() {
+            gridSize = parseInt(difficultySelect.value);
+            boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            boardEl.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
+            const totalTiles = gridSize * gridSize;
+            boardState = Array.from({ length: totalTiles - 1 }, (_, i) => i + 1);
+            boardState.push(0);
+
+            shuffleBoard();
+            moves = 0;
+            isSolved = false;
+            moveCountEl.textContent = moves;
+            winMessageEl.textContent = "";
+
+            updateHighScoreDisplay();
+            startTimer();
+        }
+
+        function renderBoard() {
+            boardEl.innerHTML = "";
+            const isImageMode = modeSelect.value === "image";
+            const tileSize = 320 / gridSize;
+            const fontSize = gridSize === 3 ? "28px" : gridSize === 4 ? "22px" : "18px";
+
+            boardState.forEach((val, idx) => {
+                const tile = document.createElement("div");
+                tile.className = val === 0 ? "tile empty" : "tile";
+                tile.style.fontSize = fontSize;
+
+                if (val !== 0) {
+                    if (isImageMode) {
+                        const correctIndex = val - 1;
+                        const row = Math.floor(correctIndex / gridSize);
+                        const col = correctIndex % gridSize;
+                        tile.style.backgroundImage = `url(${imageUrl})`;
+                        tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+                    } else {
+                        tile.style.backgroundImage = "none";
+                        tile.textContent = val;
+                    }
+                }
+
+                tile.addEventListener("click", () => handleTileClick(idx));
+                boardEl.appendChild(tile);
+            });
+        }
+
+        function handleTileClick(index) {
+            if (isSolved) return;
+
+            const emptyIndex = boardState.indexOf(0);
+            const validMoves = getValidMoves(emptyIndex);
+
+            if (validMoves.includes(index)) {
+                [boardState[emptyIndex], boardState[index]] = [boardState[index], boardState[emptyIndex]];
+                moves++;
+                moveCountEl.textContent = moves;
+                playMoveSound();
+                renderBoard();
+                checkWinCondition();
+            }
+        }
+
+        function getValidMoves(emptyIdx) {
+            const row = Math.floor(emptyIdx / gridSize);
+            const col = emptyIdx % gridSize;
+            const valid = [];
+
+            if (row > 0) valid.push(emptyIdx - gridSize);
+            if (row < gridSize - 1) valid.push(emptyIdx + gridSize);
+            if (col > 0) valid.push(emptyIdx - 1);
+            if (col < gridSize - 1) valid.push(emptyIdx + 1);
+
+            return valid;
+        }
+
+        function shuffleBoard() {
+            const shuffleSteps = gridSize * gridSize * 25;
+            for (let i = 0; i < shuffleSteps; i++) {
+                const emptyIndex = boardState.indexOf(0);
+                const validMoves = getValidMoves(emptyIndex);
+                const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+                [boardState[emptyIndex], boardState[randomMove]] = [boardState[randomMove], boardState[emptyIndex]];
+            }
+            renderBoard();
+        }
+
+        function checkWinCondition() {
+            const totalTiles = gridSize * gridSize;
+            const hasWon = boardState.every((val, idx) => {
+                if (idx === totalTiles - 1) return val === 0;
+                return val === idx + 1;
+            });
+
+            if (hasWon) {
+                isSolved = true;
+                clearInterval(timerInterval);
+                playWinSound();
+                winMessageEl.textContent = `🎉 Completed in ${moves} moves and ${timerEl.textContent}!`;
+
+                // Save High Score
+                const bestMoves = localStorage.getItem(`best_moves_${gridSize}`);
+                if (!bestMoves || moves < parseInt(bestMoves)) {
+                    localStorage.setItem(`best_moves_${gridSize}`, moves);
+                    localStorage.setItem(`best_time_${gridSize}`, secondsElapsed);
+                    updateHighScoreDisplay();
+                }
+            }
+        }
+
+        restartBtn.addEventListener("click", initGame);
+        difficultySelect.addEventListener("change", initGame);
+        modeSelect.addEventListener("change", renderBoard);
+
+        initGame();
+    </script>
+</body>
+</html>

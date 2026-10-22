@@ -1,0 +1,112 @@
+/* Filter Bar */
+.filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 18px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: #c7d2fe;
+    color: #4f46e5;
+}
+
+.filter-btn.active {
+    background: #4f46e5;
+    color: #ffffff;
+    border-color: #4f46e5;
+}
+
+/* Tests Grid */
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.test-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.test-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border-color: #c7d2fe;
+}
+
+.test-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    width: fit-content;
+}
+
+.badge-reasoning { background: #eeedff; color: #4f46e5; }
+.badge-aptitude  { background: #e0f2fe; color: #0284c7; }
+.badge-english   { background: #dcfce7; color: #16a34a; }
+.badge-gk        { background: #ffedd5; color: #ea580c; }
+
+.test-card h3 {
+    font-size: 17px;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.test-card p {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 18px;
+    line-height: 1.4;
+}
+
+.test-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #94a3b8;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+    margin-bottom: 18px;
+}
+
+.start-test-btn {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    background: #4f46e5;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+}
+
+.start-test-btn:hover {
+    background: #4338ca;
+}

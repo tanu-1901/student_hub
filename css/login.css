@@ -1,0 +1,369 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+}
+
+/* =========================
+   LEFT SECTION
+========================= */
+
+.login-info {
+    width: 52%;
+    min-height: 100vh;
+    padding: 45px 70px;
+    background: linear-gradient(135deg, #eef2ff, #f8faff);
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4f46e5;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.info-content {
+    max-width: 570px;
+    margin: auto 0;
+}
+
+.tagline {
+    display: inline-block;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #4f46e5;
+}
+
+.info-content h1 {
+    font-size: 48px;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    color: #111827;
+}
+
+.info-content h1 span {
+    color: #4f46e5;
+}
+
+.info-content > p {
+    max-width: 500px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #64748b;
+    margin-bottom: 40px;
+}
+
+/* Features List */
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.feature-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4f46e5;
+    font-weight: bold;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.feature h3 {
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.feature p {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* =========================
+   RIGHT SECTION
+========================= */
+
+.login-section {
+    width: 48%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 440px;
+}
+
+.mobile-brand {
+    display: none;
+}
+
+/* Header */
+
+.login-header {
+    margin-bottom: 35px;
+}
+
+.login-header h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.login-header p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* Form Styling */
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot-password {
+    font-size: 13px;
+    color: #4f46e5;
+    text-decoration: none;
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #dbe1ea;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Password Toggle Box */
+
+.password-box {
+    position: relative;
+}
+
+.password-box input {
+    padding-right: 70px !important;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    color: #4f46e5;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Error Messages */
+
+.form-group small {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #dc2626;
+}
+
+/* Remember Me Checkbox */
+
+.remember-row {
+    margin-bottom: 22px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.remember input {
+    width: 15px;
+    height: 15px;
+    accent-color: #4f46e5;
+}
+
+/* Message Alert Banner */
+
+.login-message {
+    display: none;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+
+/* Login Button */
+
+.login-button {
+    width: 100%;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-button:hover {
+    background: #4338ca;
+}
+
+.login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Register Section */
+
+.register-section {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.register-section a {
+    margin-left: 5px;
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Demo Box */
+
+.demo-login {
+    margin-top: 28px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.demo-login strong {
+    display: block;
+    color: #374151;
+    margin-bottom: 5px;
+}
+
+.demo-login p {
+    margin-top: 3px;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 900px) {
+    .login-info {
+        display: none;
+    }
+
+    .login-section {
+        width: 100%;
+        min-height: 100vh;
+        padding: 25px;
+    }
+
+    .mobile-brand {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-section {
+        padding: 20px;
+    }
+
+    .login-header h2 {
+        font-size: 27px;
+    }
+
+    .login-header {
+        margin-bottom: 28px;
+    }
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentPro - AI Based Performance & Cognitive Tracking System</title>
+    <link rel="stylesheet" href="css/login.css">
+    <style>
+        .demo-fill-btn {
+            background: #eef2ff;
+            color: #4f46e5;
+            border: 1px dashed #6366f1;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        .demo-fill-btn:hover {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+        .guest-explore-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .guest-explore-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- Left Information Section -->
+        <section class="login-info">
+            <div class="brand">
+                <div class="brand-icon">SP</div>
+                <span>StudentPro</span>
+            </div>
+
+            <div class="info-content">
+                <span class="tagline">AI-POWERED PERFORMANCE TRACKING</span>
+                <h1>Empower Your <span>Learning</span> & Test Mastery.</h1>
+                <p>Track mock test scores, analyze cognitive speed, solve IQ logic puzzles, and generate comprehensive academic reports in one unified dashboard.</p>
+
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">📊</div>
+                        <div>
+                            <h3>Real-Time Test Analytics</h3>
+                            <p>Instant scoring, accuracy percentages, and automated topic-level recommendations.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">🧠</div>
+                        <div>
+                            <h3>Mind Gym & Cognitive Puzzles</h3>
+                            <p>Spatial logic, speed math, Stroop reflex, and interactive sliding puzzles.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">👨‍👩‍👧</div>
+                        <div>
+                            <h3>Parent View & Live Reports</h3>
+                            <p>Downloadable PDF reports and 7-day practice tracker accessible to parents.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Login Section -->
+        <section class="login-section">
+            <div class="login-card">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">SP</div>
+                    <span>StudentPro</span>
+                </div>
+
+                <div class="login-header">
+                    <h2>Welcome Back 👋</h2>
+                    <p>Enter your credentials to access your StudentPro dashboard.</p>
+                </div>
+
+                <form id="loginForm">
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="name@example.com" autocomplete="email">
+                        <small id="emailError"></small>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="password">Password</label>
+                            <a href="#" class="forgot-password" onclick="alert('Demo Mode: Use student@gmail.com / 123456'); return false;">Forgot?</a>
+                        </div>
+                        <div class="password-box">
+                            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+                            <button type="button" class="toggle-password" id="togglePassword">Show</button>
+                        </div>
+                        <small id="passwordError"></small>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="remember-row">
+                        <label class="remember">
+                            <input type="checkbox" id="rememberMe" checked>
+                            <span>Remember me for 30 days</span>
+                        </label>
+                    </div>
+
+                    <!-- Message Alert Banner -->
+                    <div id="loginMessage" class="login-message"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="login-button" id="loginButton">
+                        <span id="buttonText">Sign In to Dashboard →</span>
+                    </button>
+
+                    <!-- Direct Explore / Guest Mode Button -->
+                    <button type="button" class="guest-explore-btn" onclick="guestLogin()">
+                        ⚡ Explore Dashboard as Guest
+                    </button>
+
+                </form>
+
+                <!-- Register Link -->
+                <div class="register-section">
+                    <span>Don't have an account?</span>
+                    <a href="register.html">Create an Account</a>
+                </div>
+
+                <!-- Demo Credentials Box -->
+                <div class="demo-login">
+                    <strong>💡 Demo Credentials:</strong>
+                    <p>Email: <code>student@gmail.com</code></p>
+                    <p>Password: <code>123456</code></p>
+                    <button type="button" class="demo-fill-btn" onclick="autoFillDemo()">Click to Auto-Fill Credentials</button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/login.js"></script>
+    <script>
+        function autoFillDemo() {
+            document.getElementById("email").value = "student@gmail.com";
+            document.getElementById("password").value = "123456";
+            document.getElementById("emailError").textContent = "";
+            document.getElementById("passwordError").textContent = "";
+        }
+
+        function guestLogin() {
+            localStorage.setItem("studentLoggedIn", "true");
+            localStorage.setItem("studentEmail", "tanu.singh@studentpro.edu");
+            localStorage.setItem("studentName", "Tanu Singh");
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+
+</html>

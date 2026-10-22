@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="mock-tests.html">Mock Tests</a>
+            <a href="papers.html">Practice Papers</a>
+            <a href="puzzles.html">Mind Gym</a>
+            <a href="sliding-puzzle.html">Sliding Puzzle</a>
+            <a href="progress.html">Progress</a>
+            <a href="parent-view.html">Parent View</a>
+        </div>
+        <div class="nav-user">
+            <span id="userEmailDisplay" style="font-weight: 600; color: #4b5563;">student@gmail.com</span>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+
+    <!-- DASHBOARD CONTAINER -->
+    <main class="dashboard-container">
+
+        <!-- WELCOME BANNER -->
+        <section class="welcome-banner">
+            <div>
+                <h1>Welcome Back, <span id="studentName">Tanu</span>! 👋</h1>
+                <p>Your AI-powered academic performance & cognitive tracker is active today.</p>
+            </div>
+            <a href="mock-tests.html" class="primary-btn">Start Mock Test →</a>
+        </section>
+
+        <!-- METRICS CARDS GRID -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">📝</div>
+                <div>
+                    <div class="metric-label">Tests Completed</div>
+                    <h3 id="statTotalTests">8</h3>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">🎯</div>
+                <div>
+                    <div class="metric-label">Average Score</div>
+                    <h3 id="statAvgScore" style="color: #16a34a;">88%</h3>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">🔥</div>
+                <div>
+                    <div class="metric-label">Daily Streak</div>
+                    <h3 id="statStreak" style="color: #ea580c;">5 Days</h3>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">🧠</div>
+                <div>
+                    <div class="metric-label">Cognitive Rating</div>
+                    <h3 id="statConsistency" style="color: #4f46e5;">High</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD MAIN CONTENT SPLIT -->
+        <div class="dashboard-content">
+
+            <!-- LEFT COLUMN: QUICK MODULES & ACTIONS -->
+            <div>
+                <!-- QUICK ACTIONS -->
+                <div class="card">
+                    <h2>Quick Learning Modules 🚀</h2>
+                    <div class="action-grid">
+                        <a href="mock-tests.html" class="action-card">
+                            <span class="action-icon">📋</span>
+                            <h3>Mock Tests</h3>
+                            <p>Timed Full-Stack & General Tests</p>
+                        </a>
+
+                        <a href="papers.html" class="action-card">
+                            <span class="action-icon">💻</span>
+                            <h3>Practice Papers</h3>
+                            <p>HTML, CSS, JS, Node, React</p>
+                        </a>
+
+                        <a href="puzzles.html" class="action-card">
+                            <span class="action-icon">🧠</span>
+                            <h3>Mind Gym</h3>
+                            <p>Pattern IQ, Math & Reflex games</p>
+                        </a>
+
+                        <a href="sliding-puzzle.html" class="action-card">
+                            <span class="action-icon">🧩</span>
+                            <h3>Sliding Puzzle</h3>
+                            <p>Spatial reordering puzzle game</p>
+                        </a>
+
+                        <a href="iq_quize.html" class="action-card">
+                            <span class="action-icon">⚡</span>
+                            <h3>Speed IQ Test</h3>
+                            <p>10-question timed cognitive test</p>
+                        </a>
+
+                        <a href="progress.html" class="action-card">
+                            <span class="action-icon">📈</span>
+                            <h3>Progress Analytics</h3>
+                            <p>Subject mastery & history</p>
+                        </a>
+
+                        <a href="parent-view.html" class="action-card">
+                            <span class="action-icon">👨‍👩‍👧</span>
+                            <h3>Parent View</h3>
+                            <p>7-day report & PDF export</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- RECENT TEST ACTIVITY -->
+                <div class="card">
+                    <h2>Recent Test History 🕒</h2>
+                    <ul class="activity-list" id="recentTestsList">
+                        <!-- Loaded dynamically from js/dashboard.js -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: AI INSIGHTS & NOTICES -->
+            <div>
+                <div class="card ai-card">
+                    <div class="ai-header">
+                        <h2>AI Study Insights</h2>
+                        <span class="badge">Active AI Model</span>
+                    </div>
+
+                    <div class="ai-body">
+                        <div class="ai-insight-item">
+                            <span class="status-icon green">✓</span>
+                            <div>
+                                <h4>Strong Retention in Frontend</h4>
+                                <p>Scored 94% on JavaScript ES6+ and Flexbox layout tests.</p>
+                            </div>
+                        </div>
+
+                        <div class="ai-insight-item">
+                            <span class="status-icon yellow">!</span>
+                            <div>
+                                <h4>Recommended Focus: Database</h4>
+                                <p>SQL joins and NoSQL querying could use a quick review session.</p>
+                            </div>
+                        </div>
+
+                        <div class="ai-recommendation">
+                            <strong>💡 Next Recommended Step:</strong>
+                            <p style="margin-top: 4px; color: #4b5563;">
+                                Try the <b>Speed IQ Quiz</b> or the <b>Node.js Practice Paper</b> to maintain your 5-day streak!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOTIVATIONAL QUOTE -->
+                <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #ffffff); border-color: #bbf7d0;">
+                    <h3 style="font-size: 14px; color: #166534; margin-bottom: 6px;">Daily Motivation 🌱</h3>
+                    <p style="font-size: 13px; color: #15803d; line-height: 1.5;">
+                        "Consistency is the key to mastery. Every puzzle solved and test attempted sharpens your cognitive edge."
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Seed Initial Test History if first run, then invoke dashboard.js -->
+    <script>
+        (function() {
+            // Seed realistic demo history if empty so dashboard is immediately rich
+            if (!localStorage.getItem("testHistory")) {
+                const sampleHistory = [
+                    { testTitle: "Full Stack Mock Test #1", totalScore: 28, totalQuestions: 30, date: "Today" },
+                    { testTitle: "JavaScript ES6+ Deep Dive", totalScore: 9, totalQuestions: 10, date: "Yesterday" },
+                    { testTitle: "Logical Reasoning - Level 1", totalScore: 5, totalQuestions: 5, date: "2 days ago" },
+                    { testTitle: "CSS3 Responsive Design", totalScore: 8, totalQuestions: 10, date: "3 days ago" }
+                ];
+                localStorage.setItem("testHistory", JSON.stringify(sampleHistory));
+            }
+
+            // Sync user name if available
+            const storedName = localStorage.getItem("studentName");
+            if (storedName) {
+                const nameEl = document.getElementById("studentName");
+                if (nameEl) nameEl.textContent = storedName;
+            }
+        })();
+    </script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

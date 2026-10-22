@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance System - Register</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- Left Information Section -->
+        <section class="login-info">
+            <div class="brand">
+                <div class="brand-icon">SP</div>
+                <span>StudentPro</span>
+            </div>
+
+            <div class="info-content">
+                <span class="tagline">JOIN STUDENTPRO TODAY</span>
+                <h1>Start Your <span>Learning</span> Journey.</h1>
+                <p>Create an account to track your test performance, daily streaks, and AI-driven study recommendations.</p>
+            </div>
+        </section>
+
+        <!-- Right Register Section -->
+        <section class="login-section">
+            <div class="login-card">
+
+                <div class="login-header">
+                    <h2>Create Account 🚀</h2>
+                    <p>Fill in your details to get started.</p>
+                </div>
+
+                <form id="registerForm">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" placeholder="Enter your full name">
+                        <small id="nameError"></small>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="regEmail">Email Address</label>
+                        <input type="email" id="regEmail" placeholder="Enter your email">
+                        <small id="emailError"></small>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" placeholder="Minimum 6 characters">
+                        <small id="passwordError"></small>
+                    </div>
+
+                    <!-- Banner Alert -->
+                    <div id="registerMessage" class="login-message"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="login-button" id="registerBtn">
+                        <span id="regBtnText">Create Account</span>
+                    </button>
+
+                </form>
+
+                <div class="register-section">
+                    <span>Already have an account?</span>
+                    <a href="index.html">Log In</a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/register.js"></script>
+</body>
+
+</html>
