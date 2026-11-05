@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Account - StudentPro</title>
+    <link rel="stylesheet" href="css/login.css">
+    <style>
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .parent-info-notice {
+            background: rgba(240, 253, 244, 0.85);
+            border-left: 4px solid #16a34a;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            color: #166534;
+            margin-bottom: 16px;
+            line-height: 1.45;
+            border: 1px solid #bbf7d0;
+            border-left-width: 4px;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 13px 20px;
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
+        }
+
+        .register-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13.5px;
+            color: #64748b;
+        }
+
+        .register-section a {
+            color: #4f46e5;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        .register-section a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- Left Information Section -->
+        <section class="login-info">
+            <div class="brand">
+                <div class="brand-icon">SP</div>
+                <span>StudentPro</span>
+            </div>
+
+            <div class="info-content">
+                <span class="tagline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                    NEW ACCOUNT REGISTRATION
+                </span>
+                <h1>Begin Your <span>Excellence</span> Journey.</h1>
+                <p>Register as a student to track study hours, solve subject-specific mock tests, and enable automated academic PDF progress reports sent straight to your parents.</p>
+
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon-pill indigo">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div>
+                            <h3>Real-Time Study Hour Tracking</h3>
+                            <p>Automated session timer and interactive bar & pie charts visualization.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon-pill purple">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div>
+                            <h3>Automated SMTP Parent Dispatch</h3>
+                            <p>PDF reports generated automatically and delivered to both student and parent inboxes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-text">
+                © 2026 StudentPro Academic Portal. Enterprise Grade Architecture.
+            </div>
+        </section>
+
+        <!-- Right Register Section -->
+        <section class="login-section">
+            <div class="login-card" style="max-width: 500px;">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">SP</div>
+                    <span>StudentPro</span>
+                </div>
+
+                <div class="login-header">
+                    <h2>Create Your Account</h2>
+                    <p>Select your portal role and enter your details to register.</p>
+                </div>
+
+                <!-- ROLE SWITCH (CLEAN SVG ICONS) -->
+                <div class="role-switch">
+                    <button type="button" class="role-btn active" id="btnRoleStudent" onclick="switchRegRole('student')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        Student Registration
+                    </button>
+                    <button type="button" class="role-btn" id="btnRoleTeacher" onclick="switchRegRole('teacher')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        Teacher Registration
+                    </button>
+                </div>
+
+                <form id="registerForm">
+                    <input type="hidden" id="regRole" value="student">
+
+                    <!-- Basic Info -->
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" placeholder="e.g. Tanu Singh" required>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="regEmail">Email Address</label>
+                            <input type="email" id="regEmail" placeholder="student@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regPassword">Password</label>
+                            <input type="password" id="regPassword" placeholder="Min 6 characters" required>
+                        </div>
+                    </div>
+
+                    <!-- STUDENT FIELDS -->
+                    <div id="studentFields">
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="regStream">Academic Stream</label>
+                                <select id="regStream">
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Information Technology">Information Technology</option>
+                                    <option value="Electronics & Communication">Electronics & Communication</option>
+                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                    <option value="Civil Engineering">Civil Engineering</option>
+                                    <option value="General Aptitude">General Aptitude</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regClass">Class / Year</label>
+                                <input type="text" id="regClass" placeholder="e.g. 12th Standard / 3rd Year" value="12th Standard">
+                            </div>
+                        </div>
+
+                        <div class="parent-info-notice">
+                            <strong style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                Parent Reporting Verification:
+                            </strong>
+                            Enter parent contact details below so official PDF progress reports and mock test summaries can be delivered via SMTP.
+                        </div>
+
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="regParentMobile">Parent Mobile Number</label>
+                                <input type="tel" id="regParentMobile" placeholder="e.g. 9876543210" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regParentEmail">Parent Email Address</label>
+                                <input type="email" id="regParentEmail" placeholder="parent@example.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEACHER FIELDS -->
+                    <div id="teacherFields" style="display: none;">
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="regDept">Department</label>
+                                <input type="text" id="regDept" placeholder="e.g. Computer Science & Engg" value="Computer Science & Engineering">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regDesignation">Designation</label>
+                                <input type="text" id="regDesignation" placeholder="e.g. Associate Professor" value="Faculty Instructor">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banner Alert -->
+                    <div id="registerMessage" class="login-message" style="display: none;"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="login-button" id="registerBtn">
+                        <span id="regBtnText">Create Student Account</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+
+                </form>
+
+                <div class="register-section">
+                    <span>Already have an account?</span>
+                    <a href="index.html">Log In</a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/register.js"></script>
+    <script>
+        function switchRegRole(role) {
+            document.getElementById('regRole').value = role;
+            const btnStudent = document.getElementById('btnRoleStudent');
+            const btnTeacher = document.getElementById('btnRoleTeacher');
+            const studentFields = document.getElementById('studentFields');
+            const teacherFields = document.getElementById('teacherFields');
+            const btnText = document.getElementById('regBtnText');
+            const parentEmail = document.getElementById('regParentEmail');
+            const parentMobile = document.getElementById('regParentMobile');
+
+            if (role === 'teacher') {
+                btnTeacher.classList.add('active');
+                btnStudent.classList.remove('active');
+                studentFields.style.display = 'none';
+                teacherFields.style.display = 'block';
+                btnText.textContent = 'Create Teacher Account';
+                parentEmail.removeAttribute('required');
+                parentMobile.removeAttribute('required');
+            } else {
+                btnStudent.classList.add('active');
+                btnTeacher.classList.remove('active');
+                studentFields.style.display = 'block';
+                teacherFields.style.display = 'none';
+                btnText.textContent = 'Create Student Account';
+                parentEmail.setAttribute('required', 'true');
+                parentMobile.setAttribute('required', 'true');
+            }
+        }
+    </script>
+</body>
+
+</html>

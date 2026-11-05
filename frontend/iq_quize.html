@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed IQ & Logic Test - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+
+        .iq-quiz-wrapper {
+            flex: 1; display: flex;
+            justify-content: center; align-items: center;
+            padding: 30px 20px;
+        }
+
+        .quiz-card {
+            background: rgba(255,255,255,0.84);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 24px; padding: 30px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 20px 48px -8px rgba(15,23,42,0.08);
+            max-width: 530px; width: 100%;
+        }
+
+        .quiz-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 14px;
+            border-bottom: 1.5px solid rgba(226,232,240,0.6);
+        }
+
+        .question-number {
+            font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .timer-badge {
+            background: #fee2e2; color: #ef4444;
+            padding: 6px 14px; border-radius: 9999px;
+            font-weight: 700; font-size: 13px;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        .question-text {
+            font-size: 17px; font-weight: 600; color: #1e293b;
+            margin-bottom: 22px; line-height: 1.5;
+        }
+
+        .options-grid { display: flex; flex-direction: column; gap: 11px; margin-bottom: 24px; }
+
+        .option-btn {
+            background: rgba(248,250,252,0.9);
+            border: 2px solid #e2e8f0;
+            padding: 13px 16px; border-radius: 12px;
+            font-size: 14.5px; font-weight: 500; color: #334155;
+            text-align: left; cursor: pointer;
+            transition: all 0.18s ease;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .option-btn::before {
+            content: attr(data-index);
+            width: 26px; height: 26px; border-radius: 50%;
+            background: #e2e8f0; color: #64748b;
+            font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .option-btn:hover  { border-color: #6366f1; background: #eef2ff; color: #4f46e5; }
+        .option-btn:hover::before { background: #c7d2fe; color: #4f46e5; }
+        .option-btn.selected { border-color: #4f46e5; background: #e0e7ff; color: #4338ca; font-weight: 600; }
+        .option-btn.selected::before { background: #4f46e5; color: #fff; }
+
+        .action-btn {
+            width: 100%; background: linear-gradient(135deg, #4f46e5, #4338ca);
+            color: #fff; border: none; padding: 14px; border-radius: 12px;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.2);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,70,229,0.3); }
+        .action-btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Result Screen */
+        .result-screen { text-align: center; }
+        .result-screen h2 {
+            font-size: 22px; font-weight: 800; color: #1e293b;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .score-box { font-size: 48px; font-weight: 800; color: #4f46e5; margin: 16px 0; }
+        .rating-pill {
+            display: inline-block; padding: 6px 18px; border-radius: 9999px;
+            font-size: 14px; font-weight: 700; margin-bottom: 20px;
+            background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe;
+        }
+
+        .review-list {
+            text-align: left; margin-top: 18px;
+            max-height: 240px; overflow-y: auto; padding-right: 4px;
+        }
+        .review-list::-webkit-scrollbar { width: 4px; }
+        .review-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 2px; }
+        .review-list::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 2px; }
+
+        .review-item {
+            background: rgba(248,250,252,0.9); border-radius: 10px;
+            padding: 11px 14px; margin-bottom: 8px; font-size: 13px;
+            border: 1px solid rgba(226,232,240,0.6); line-height: 1.5;
+        }
+
+        .result-actions {
+            display: flex; gap: 10px; justify-content: center; margin-top: 20px;
+        }
+        .result-actions .action-btn { width: auto; flex: 1; }
+        .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a) !important; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="mock-tests.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Mock Tests
+            </a>
+            <a href="papers.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Practice Papers
+            </a>
+            <a href="puzzles.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Mind Gym
+            </a>
+            <a href="sliding-puzzle.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6"/><rect x="16" y="2" width="6" height="6"/><rect x="2" y="16" width="6" height="6"/><rect x="10" y="10" width="4" height="4"/></svg>
+                Sliding Puzzle
+            </a>
+            <a href="progress.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Progress
+            </a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge-pill">
+                <div class="user-avatar-circle" id="userAvatarCircle">S</div>
+                <span id="userEmailDisplay">student@gmail.com</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="iq-quiz-wrapper">
+        <div class="quiz-card" id="quizContainer">
+            <div class="quiz-header">
+                <span class="question-number" id="qNumber">Question 1/10</span>
+                <span class="timer-badge" id="timer">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    20s
+                </span>
+            </div>
+
+            <div class="question-text" id="qText">Loading question...</div>
+            <div class="options-grid" id="optionsContainer"></div>
+
+            <button class="action-btn" id="nextBtn" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Submit Answer
+            </button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const currentUser = ApiService.checkAuth('student');
+        if (!currentUser) throw new Error('Not authorized');
+
+        // Nav display
+        document.getElementById('userEmailDisplay').textContent = currentUser.email;
+        const initials = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
+        const avatarCircle = document.getElementById('userAvatarCircle');
+        if (avatarCircle) avatarCircle.textContent = initials;
+        document.getElementById('logoutBtn').addEventListener('click', () => ApiService.logout());
+
+        const questions = [
+            { question: "If you face North-East, turn 180° clockwise, and then turn 90° anti-clockwise, which direction are you facing?", options: ["South-East", "South-West", "North-West", "North-East"], answer: 0, timeLimit: 20, explanation: "NE + 180° = SW. SW - 90° (anti-clockwise) = South-East." },
+            { question: "In a code, SMART is written as TNBUS. How is BRAIN written in that code?", options: ["CSBJO", "CSBJM", "AQZHM", "CSCJO"], answer: 0, timeLimit: 15, explanation: "Shift each letter by +1: B→C, R→S, A→B, I→J, N→O." },
+            { question: "Find the missing number: 3→9, 4→16, 5→25, 6→36, 7→?", options: ["42", "47", "49", "56"], answer: 2, timeLimit: 15, explanation: "Square of the number: 7 × 7 = 49." },
+            { question: "A father's age is 3 times his son's age. If the sum of their ages is 48 years, how old is the son?", options: ["10 years", "12 years", "14 years", "16 years"], answer: 1, timeLimit: 20, explanation: "x + 3x = 48 ⇒ 4x = 48 ⇒ x = 12 years." },
+            { question: "Which of the following is the 'Odd One Out'?", options: ["Mercury", "Venus", "Moon", "Mars"], answer: 2, timeLimit: 10, explanation: "Moon is a natural satellite, whereas the rest are planets." },
+            { question: "Find the missing number in the sequence: 3, 5, 9, 17, 33, ?", options: ["50", "65", "66", "68"], answer: 1, timeLimit: 20, explanation: "Increments double each step (+2, +4, +8, +16, +32). 33 + 32 = 65." },
+            { question: "If 2×3=12, 3×4=24, and 4×5=40, then 5×6=?", options: ["30", "50", "60", "70"], answer: 2, timeLimit: 15, explanation: "Formula: (A×B)×2. So (5×6)×2 = 60." },
+            { question: "A clock reads 3:15. If the minute hand points East, which direction does the hour hand point?", options: ["North", "East (slight South-East)", "West", "South"], answer: 1, timeLimit: 15, explanation: "At 3:15, both hands point towards the East." },
+            { question: "Solve using BODMAS: 10 + 10 × 0 + 10 = ?", options: ["0", "10", "20", "100"], answer: 2, timeLimit: 15, explanation: "Multiply first: 10×0=0. Then add: 10+0+10=20." },
+            { question: "Pointing to a photo, Raman said: 'He is the son of my father's only son.' Who is in the photo?", options: ["Raman's brother", "Raman's son", "Raman's father", "Raman himself"], answer: 1, timeLimit: 20, explanation: "'Father's only son' = Raman. His son is in the photo." }
+        ];
+
+        let currentIdx = 0, score = 0, selectedOption = null, timeLeft = 0, timerInterval = null;
+        const qNumberEl = document.getElementById("qNumber");
+        const timerEl   = document.getElementById("timer");
+        const qTextEl   = document.getElementById("qText");
+        const optionsContainer = document.getElementById("optionsContainer");
+        const nextBtn   = document.getElementById("nextBtn");
+        const quizContainer = document.getElementById("quizContainer");
+
+        const LETTERS = ['A', 'B', 'C', 'D'];
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = questions[currentIdx].timeLimit;
+            timerEl.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${timeLeft}s`;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${timeLeft}s`;
+                if (timeLeft <= 0) { clearInterval(timerInterval); handleAnswerSubmit(true); }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const currentQ = questions[currentIdx];
+            qNumberEl.textContent = `Question ${currentIdx + 1}/${questions.length}`;
+            qTextEl.textContent = currentQ.question;
+            optionsContainer.innerHTML = "";
+            selectedOption = null; nextBtn.disabled = true;
+
+            currentQ.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.setAttribute('data-index', LETTERS[index]);
+                btn.textContent = opt;
+                btn.addEventListener("click", () => selectOption(index, btn));
+                optionsContainer.appendChild(btn);
+            });
+            startTimer();
+        }
+
+        function selectOption(index, btnEl) {
+            document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+            btnEl.classList.add("selected");
+            selectedOption = index; nextBtn.disabled = false;
+        }
+
+        function handleAnswerSubmit(timeOut = false) {
+            clearInterval(timerInterval);
+            if (!timeOut && selectedOption === questions[currentIdx].answer) score++;
+            currentIdx++;
+            if (currentIdx < questions.length) loadQuestion();
+            else showResults();
+        }
+
+        function showResults() {
+            const total = questions.length;
+            const percentage = (score / total) * 100;
+            const rating = percentage >= 80 ? "Superior Logic IQ" : percentage >= 50 ? "Average Speed IQ" : "Practice Needed";
+
+            // Sync to history
+            let dashHistory = JSON.parse(localStorage.getItem("testHistory")) || [];
+            dashHistory.unshift({ testTitle: "Speed IQ & Logic Test (10 Qs)", totalScore: score, totalQuestions: total, date: "Today" });
+            localStorage.setItem("testHistory", JSON.stringify(dashHistory));
+            ApiService.submitTestResult({ subject: "reasoning", testTitle: "Speed IQ & Logic Test (10 Qs)", score, totalQuestions: total, timeTakenSeconds: 150, accuracy: Math.round((score / total) * 100) }).catch(e => console.warn("[IQ Quiz] Local fallback:", e));
+
+            const reviewHTML = questions.map((q, idx) => `
+                <div class="review-item">
+                    <strong style="color:#1e293b;">Q${idx+1}:</strong> ${q.question}<br>
+                    <span style="color:#16a34a;"><strong>Answer:</strong> ${q.options[q.answer]}</span><br>
+                    <small style="color:#64748b;">${q.explanation}</small>
+                </div>
+            `).join("");
+
+            quizContainer.innerHTML = `
+                <div class="result-screen">
+                    <h2>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                        Test Completed!
+                    </h2>
+                    <div class="score-box">${score} <span style="font-size:24px;color:#94a3b8;">/ ${total}</span></div>
+                    <div class="rating-pill">${rating}</div>
+                    <div class="review-list">${reviewHTML}</div>
+                    <div class="result-actions">
+                        <button class="action-btn" onclick="location.reload()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.84"/></svg>
+                            Retake Test
+                        </button>
+                        <a href="dashboard.html" class="action-btn btn-green" style="text-decoration:none;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            Dashboard
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        nextBtn.addEventListener("click", () => handleAnswerSubmit(false));
+        loadQuestion();
+    </script>
+</body>
+</html>

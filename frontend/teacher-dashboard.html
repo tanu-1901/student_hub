@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Panel - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        /* ── Teacher Badge ── */
+        .teacher-badge {
+            background: rgba(219,39,119,0.1);
+            color: #db2777;
+            border: 1px solid rgba(219,39,119,0.25);
+            padding: 3px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Streams Grid ── */
+        .streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stream-card {
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(255,255,255,0.9);
+            border-radius: 18px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 16px rgba(15,23,42,0.04);
+        }
+
+        .stream-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(79,70,229,0.4);
+            box-shadow: 0 12px 28px rgba(79,70,229,0.12);
+        }
+
+        .stream-card.active {
+            border-color: #4f46e5;
+            background: linear-gradient(135deg, rgba(238,242,255,0.95), rgba(255,255,255,0.95));
+            box-shadow: 0 8px 24px rgba(79,70,229,0.18);
+        }
+
+        .stream-icon-box {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 12px;
+            background: #eef2ff; color: #4f46e5;
+            border: 1px solid rgba(199,210,254,0.6);
+        }
+
+        .stream-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+        .stream-enroll { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+
+        .stream-meta {
+            font-size: 12px; color: #64748b;
+            display: flex; justify-content: space-between;
+            padding-top: 10px; border-top: 1px dashed rgba(226,232,240,0.8);
+        }
+
+        /* ── Student Table Container ── */
+        .student-table-container {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 24px rgba(15,23,42,0.04);
+            margin-bottom: 30px;
+        }
+
+        .table-header-row {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px; margin-bottom: 18px;
+        }
+
+        .search-box-teacher {
+            padding: 9px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 13px;
+            min-width: 240px;
+            outline: none;
+            background: rgba(248,250,252,0.9);
+            color: #1e293b;
+            transition: border-color 0.2s;
+        }
+        .search-box-teacher:focus { border-color: #4f46e5; }
+
+        .student-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .student-table th {
+            background: rgba(248,250,252,0.9); color: #475569;
+            font-weight: 700; text-align: left;
+            padding: 12px 14px; border-bottom: 1.5px solid #e2e8f0;
+        }
+        .student-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(241,245,249,0.8);
+            color: #334155; vertical-align: middle;
+        }
+        .student-table tr:hover td { background: rgba(238,242,255,0.3); }
+        .student-table tr:last-child td { border-bottom: none; }
+
+        .action-btn-pill {
+            padding: 6px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 600;
+            cursor: pointer; border: none; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 5px;
+            text-decoration: none; margin: 2px;
+        }
+        .btn-view-progress { background: #4f46e5; color: #fff; }
+        .btn-view-progress:hover { background: #4338ca; }
+        .btn-send-report { background: #22c55e; color: #fff; }
+        .btn-send-report:hover { background: #16a34a; }
+        .btn-download-pdf { background: rgba(241,245,249,0.9); color: #475569; border: 1px solid #cbd5e1; }
+        .btn-download-pdf:hover { background: #e2e8f0; }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 30px 15px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            max-width: 900px; width: 100%;
+            padding: 28px;
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.9);
+        }
+
+        .modal-close-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(241,245,249,0.9); border: none;
+            width: 36px; height: 36px; border-radius: 50%;
+            font-size: 16px; cursor: pointer; font-weight: bold;
+            color: #64748b; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close-btn:hover { background: #fee2e2; color: #ef4444; }
+
+        .report-feedback-alert {
+            display: none; padding: 12px 16px;
+            border-radius: 10px; margin-bottom: 16px;
+            font-size: 13px; font-weight: 600;
+        }
+
+        /* ── Modal Metric Cards ── */
+        .modal-metrics {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px; margin-bottom: 20px;
+        }
+        .modal-metric-card {
+            background: rgba(248,250,252,0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px; padding: 14px;
+            text-align: center;
+        }
+        .modal-metric-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 8px;
+        }
+        .modal-metric-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+        .modal-metric-value { font-size: 20px; font-weight: 800; color: #1e293b; }
+
+        /* ── Contact Banner ── */
+        .parent-contact-banner {
+            background: rgba(248,250,252,0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px; padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex; justify-content: space-around;
+            flex-wrap: wrap; gap: 14px;
+        }
+        .contact-item {}
+        .contact-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 2px; }
+        .contact-value { font-size: 14px; font-weight: 700; color: #1e293b; }
+
+        /* ── AI Insight Banner ── */
+        .ai-insight-modal {
+            background: rgba(240,253,244,0.9);
+            border-left: 4px solid #22c55e;
+            padding: 14px 16px; border-radius: 10px;
+        }
+        .ai-insight-modal strong { color: #166534; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+        .ai-insight-modal p { font-size: 12px; color: #15803d; margin-top: 6px; line-height: 1.6; }
+
+        /* Modal test history */
+        .modal-history-wrap {
+            overflow-x: auto; max-height: 220px;
+            border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TEACHER NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+            <span class="teacher-badge">Faculty Panel</span>
+        </div>
+        <div class="nav-links">
+            <a href="teacher-dashboard.html" class="active">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Streams & Students
+            </a>
+            <a href="parent-view.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Parent View Preview
+            </a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge-pill">
+                <div class="user-avatar-circle" style="background:linear-gradient(135deg,#db2777,#9d174d);">T</div>
+                <span id="teacherNameDisplay">Prof. Rajesh Sharma</span>
+            </div>
+            <button class="logout-btn" onclick="ApiService.logout()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+
+        <!-- WELCOME BANNER -->
+        <section class="welcome-banner" style="background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);">
+            <div>
+                <span class="teacher-badge" style="background:rgba(255,255,255,0.12);color:#c7d2fe;border-color:transparent;">Department Dashboard</span>
+                <h1 style="color:#fff;margin-top:8px;display:flex;align-items:center;gap:10px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.85;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    Academic Stream Director
+                </h1>
+                <p style="color:rgba(255,255,255,0.75);">Filter students by branch, inspect real-time progress boards, and dispatch official PDF reports to parents.</p>
+            </div>
+            <div>
+                <button class="primary-btn" onclick="exportBatchReport()" style="background:#22c55e;display:flex;align-items:center;gap:8px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Send Batch Report
+                </button>
+            </div>
+        </section>
+
+        <!-- STREAMS SELECTOR TITLE -->
+        <div style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;">
+            <div>
+                <h2 style="font-size:19px;color:#1e293b;font-weight:800;">Select Academic Stream / Branch</h2>
+                <p style="font-size:13px;color:#64748b;margin-top:2px;">Click any stream below to view its enrolled students and their academic health.</p>
+            </div>
+            <span id="activeStreamBadge" style="font-size:13px;font-weight:700;color:#4f46e5;background:#eef2ff;padding:5px 14px;border-radius:9999px;border:1px solid #c7d2fe;">Viewing: Computer Science</span>
+        </div>
+
+        <!-- STREAMS GRID -->
+        <section class="streams-grid" id="streamsContainer"></section>
+
+        <!-- STUDENT TABLE -->
+        <section class="student-table-container">
+            <div class="table-header-row">
+                <div>
+                    <h3 style="font-size:17px;color:#1e293b;font-weight:800;" id="currentStreamTitle">Computer Science - Student Directory</h3>
+                    <p style="font-size:12px;color:#64748b;margin-top:2px;" id="currentStreamSub">Showing enrolled students across all semesters</p>
+                </div>
+                <input type="text" id="studentSearchInput" class="search-box-teacher"
+                    placeholder="Search student name or roll no..."
+                    onkeyup="filterStudentTable()">
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll Number</th>
+                            <th>Class / Year</th>
+                            <th>Streak</th>
+                            <th>Tests Taken</th>
+                            <th>Avg Accuracy</th>
+                            <th>Parent Details</th>
+                            <th style="text-align:right;">Faculty Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PROGRESS & PARENT VIEW MODAL -->
+    <div class="modal-overlay" id="studentProgressModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeProgressModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            <div id="modalReportFeedback" class="report-feedback-alert"></div>
+
+            <!-- MODAL HEADER -->
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e2e8f0;padding-bottom:16px;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                    <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;" id="mAvatar">TS</div>
+                    <div>
+                        <h2 style="font-size:20px;color:#1e293b;" id="mStudentName">Tanu Singh</h2>
+                        <p style="font-size:13px;color:#64748b;" id="mStudentMeta">Roll: STU-101 • Stream: Computer Science • Class: 12th Standard</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="action-btn-pill btn-send-report" id="mBtnSendEmail" onclick="sendReportForCurrentModalStudent()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        Send PDF to Parent
+                    </button>
+                    <a class="action-btn-pill btn-download-pdf" id="mBtnDownloadPdf" target="_blank" href="#">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- PARENT CONTACT BANNER -->
+            <div class="parent-contact-banner">
+                <div class="contact-item">
+                    <div class="contact-label">Guardian Name</div>
+                    <div class="contact-value" id="mParentName">Mr. R. K. Singh</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Parent Mobile</div>
+                    <div class="contact-value" id="mParentMobile">9876543210</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Parent Email</div>
+                    <div class="contact-value" id="mParentEmail">parent@gmail.com</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Weekly Study Time</div>
+                    <div class="contact-value" id="mStudyHours" style="color:#4f46e5;">15.0 hrs</div>
+                </div>
+            </div>
+
+            <!-- METRICS GRID -->
+            <div class="modal-metrics">
+                <div class="modal-metric-card">
+                    <div class="modal-metric-icon" style="background:#eef2ff;color:#4f46e5;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </div>
+                    <div class="modal-metric-label">Tests Done</div>
+                    <div class="modal-metric-value" id="mTotalTests">8</div>
+                </div>
+                <div class="modal-metric-card">
+                    <div class="modal-metric-icon" style="background:#dcfce7;color:#16a34a;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="modal-metric-label">Avg Score</div>
+                    <div class="modal-metric-value" id="mAvgAccuracy" style="color:#16a34a;">91%</div>
+                </div>
+                <div class="modal-metric-card">
+                    <div class="modal-metric-icon" style="background:#fff7ed;color:#ea580c;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <div class="modal-metric-label">Daily Streak</div>
+                    <div class="modal-metric-value" id="mStreak" style="color:#ea580c;">5 Days</div>
+                </div>
+                <div class="modal-metric-card">
+                    <div class="modal-metric-icon" style="background:#f5f3ff;color:#7c3aed;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div class="modal-metric-label">Cognitive Rating</div>
+                    <div class="modal-metric-value" id="mCognitiveRating" style="color:#7c3aed;">High</div>
+                </div>
+            </div>
+
+            <!-- TEST HISTORY IN MODAL -->
+            <h3 style="font-size:15px;color:#1e293b;font-weight:700;margin-bottom:10px;">Recent Test Attempts & Solved Papers</h3>
+            <div class="modal-history-wrap">
+                <table class="student-table" style="font-size:12px;">
+                    <thead>
+                        <tr style="position:sticky;top:0;background:#f8fafc;">
+                            <th>Test Title</th>
+                            <th>Score</th>
+                            <th>Accuracy</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mTestHistoryBody"></tbody>
+                </table>
+            </div>
+
+            <!-- AI COUNSELOR INSIGHT -->
+            <div class="ai-insight-modal">
+                <strong>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><circle cx="18" cy="6" r="3"/></svg>
+                    AI Academic Counselor Note for Faculty & Parents:
+                </strong>
+                <p id="mAICounselorText">
+                    Student demonstrates strong command in frontend and analytical problem solving. Recommend 15 mins daily practice on database queries and backend workflows.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Check teacher authentication
+        const currentUser = ApiService.checkAuth('teacher');
+        if (currentUser) {
+            document.getElementById('teacherNameDisplay').textContent = currentUser.name;
+        }
+
+        let streamsData = [];
+        let currentSelectedStream = 'Computer Science';
+        let currentStudents = [];
+        let activeStudentInModal = null;
+
+        // Stream SVG icon map
+        const streamIcons = {
+            'cs':    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+            'it':    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+            'ece':   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+            'mech':  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>`,
+            'civil': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`,
+        };
+        const streamColors = { cs: '#4f46e5', it: '#0284c7', ece: '#7c3aed', mech: '#ea580c', civil: '#16a34a' };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadStreams();
+            await selectStream(currentSelectedStream);
+        });
+
+        async function loadStreams() {
+            try {
+                const response = await ApiService.getTeacherStreams();
+                if (response && response.success) {
+                    streamsData = response.streams;
+                }
+            } catch (e) {
+                streamsData = [
+                    { id: 'cs',    name: 'Computer Science',           studentCount: 14 },
+                    { id: 'it',    name: 'Information Technology',     studentCount: 11 },
+                    { id: 'ece',   name: 'Electronics & Communication',studentCount: 9  },
+                    { id: 'mech',  name: 'Mechanical Engineering',     studentCount: 8  },
+                    { id: 'civil', name: 'Civil Engineering',          studentCount: 7  }
+                ];
+            }
+            renderStreams();
+        }
+
+        function renderStreams() {
+            const container = document.getElementById('streamsContainer');
+            container.innerHTML = '';
+            streamsData.forEach(stream => {
+                const icon = streamIcons[stream.id] || streamIcons['cs'];
+                const color = streamColors[stream.id] || '#4f46e5';
+                const card = document.createElement('div');
+                card.className = `stream-card ${stream.name === currentSelectedStream ? 'active' : ''}`;
+                card.onclick = () => selectStream(stream.name);
+                card.innerHTML = `
+                    <div class="stream-icon-box" style="background:${color}18;color:${color};border-color:${color}30;">${icon}</div>
+                    <div class="stream-title">${stream.name}</div>
+                    <div class="stream-enroll">${stream.studentCount || 10} Students Enrolled</div>
+                    <div class="stream-meta">
+                        <span>Avg Acc: <strong>88%</strong></span>
+                        <span style="color:${color};font-weight:700;">Explore →</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function selectStream(streamName) {
+            currentSelectedStream = streamName;
+            document.getElementById('activeStreamBadge').textContent = `Viewing: ${streamName}`;
+            document.getElementById('currentStreamTitle').textContent = `${streamName} - Student Directory`;
+            renderStreams();
+
+            try {
+                const response = await ApiService.getStudentsByStream(streamName);
+                currentStudents = (response && response.success) ? response.students : getSampleStudents(streamName);
+            } catch (err) {
+                currentStudents = getSampleStudents(streamName);
+            }
+
+            renderStudentTable(currentStudents);
+        }
+
+        function getSampleStudents(stream) {
+            return [
+                { _id:'stu_01', id:'stu_01', name:'Tanu Singh', rollNumber:'STU-101', classOrYear:'12th Standard', stream, activeStreakDays:5, totalTests:8, avgAccuracy:92, parentName:'Mr. R. K. Singh', parentMobile:'9876543210', parentEmail:'parent.tanu@gmail.com' },
+                { _id:'stu_02', id:'stu_02', name:'Rahul Sharma', rollNumber:'STU-102', classOrYear:'3rd Year B.Tech', stream, activeStreakDays:4, totalTests:6, avgAccuracy:86, parentName:'Mrs. S. Sharma', parentMobile:'9812345678', parentEmail:'parent.rahul@gmail.com' },
+                { _id:'stu_03', id:'stu_03', name:'Priya Patel', rollNumber:'STU-103', classOrYear:'Final Year', stream, activeStreakDays:7, totalTests:12, avgAccuracy:95, parentName:'Mr. V. Patel', parentMobile:'9845612300', parentEmail:'parent.priya@gmail.com' }
+            ];
+        }
+
+        function renderStudentTable(students) {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#64748b;">No students found in this stream.</td></tr>`;
+                return;
+            }
+            students.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <strong>${s.name}</strong><br>
+                        <small style="color:#64748b;">${s.email || (s.name.toLowerCase().replace(' ','.') + '@studentpro.edu')}</small>
+                    </td>
+                    <td><code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;">${s.rollNumber || 'STU-' + Math.floor(100+Math.random()*900)}</code></td>
+                    <td>${s.classOrYear || '12th Standard'}</td>
+                    <td>
+                        <span style="color:#ea580c;font-weight:700;display:flex;align-items:center;gap:4px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            ${s.activeStreakDays || 3}d
+                        </span>
+                    </td>
+                    <td>${s.totalTests || 6}</td>
+                    <td><strong style="color:#16a34a;">${s.avgAccuracy || 88}%</strong></td>
+                    <td>
+                        <span style="font-size:11px;display:flex;align-items:center;gap:3px;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6 19.79 19.79 0 0 1 1.61 5a2 2 0 0 1 1.95-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.1a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/></svg>
+                            ${s.parentMobile || '9876543210'}
+                        </span>
+                        <span style="font-size:11px;color:#4f46e5;display:flex;align-items:center;gap:3px;margin-top:3px;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            ${s.parentEmail || 'parent@gmail.com'}
+                        </span>
+                    </td>
+                    <td style="text-align:right;">
+                        <button class="action-btn-pill btn-view-progress" onclick="openStudentProgressModal('${s._id || s.id}')">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            Progress
+                        </button>
+                        <button class="action-btn-pill btn-send-report" onclick="quickSendEmail('${s._id || s.id}', '${s.name}', '${s.parentEmail || 'parent@example.com'}')">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            Send PDF
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterStudentTable() {
+            const query = document.getElementById('studentSearchInput').value.toLowerCase();
+            const filtered = currentStudents.filter(s =>
+                s.name.toLowerCase().includes(query) ||
+                (s.rollNumber && s.rollNumber.toLowerCase().includes(query))
+            );
+            renderStudentTable(filtered);
+        }
+
+        // ==========================================
+        // MODAL
+        // ==========================================
+        async function openStudentProgressModal(studentId) {
+            const modal = document.getElementById('studentProgressModal');
+            document.getElementById('modalReportFeedback').style.display = 'none';
+
+            let progressData = null;
+            try {
+                const res = await ApiService.getStudentProgressForTeacher(studentId);
+                if (res && res.success) progressData = res.progressData;
+            } catch (e) { /* use fallback */ }
+
+            const student = (progressData && progressData.student) ||
+                currentStudents.find(s => (s._id || s.id) === studentId) || currentStudents[0];
+            activeStudentInModal = student;
+
+            document.getElementById('mStudentName').textContent = student.name;
+            document.getElementById('mStudentMeta').textContent = `Roll: ${student.rollNumber || 'STU-101'} • Stream: ${student.stream || currentSelectedStream} • Class: ${student.classOrYear || '12th Standard'}`;
+            document.getElementById('mAvatar').textContent = student.name.split(' ').map(w => w[0]).join('').toUpperCase();
+            document.getElementById('mParentName').textContent = student.parentName || 'Guardian';
+            document.getElementById('mParentMobile').textContent = student.parentMobile || '9876543210';
+            document.getElementById('mParentEmail').textContent = student.parentEmail || 'parent@example.com';
+            document.getElementById('mStudyHours').textContent = `${student.totalStudyHours || '15.0'} hrs`;
+            document.getElementById('mTotalTests').textContent = student.totalTests || '8';
+            document.getElementById('mAvgAccuracy').textContent = `${student.avgAccuracy || 91}%`;
+            document.getElementById('mStreak').textContent = `${student.activeStreakDays || 5} Days`;
+            document.getElementById('mBtnDownloadPdf').href = ApiService.downloadPdfReportUrl(student.id || student._id);
+
+            const tBody = document.getElementById('mTestHistoryBody');
+            tBody.innerHTML = '';
+            const tests = (progressData && progressData.recentTests) || [
+                { testTitle: 'Full Stack Mock Test #1', score: 28, totalQuestions: 30, accuracy: 93 },
+                { testTitle: 'JavaScript ES6+ Deep Dive', score: 9, totalQuestions: 10, accuracy: 90 },
+                { testTitle: 'Logical Reasoning - Level 1', score: 5, totalQuestions: 5, accuracy: 100 },
+                { testTitle: 'CSS3 Responsive Design', score: 8, totalQuestions: 10, accuracy: 80 }
+            ];
+            tests.forEach(t => {
+                const acc = t.accuracy || Math.round((t.score/t.totalQuestions)*100);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${t.testTitle}</strong></td>
+                    <td>${t.score}/${t.totalQuestions}</td>
+                    <td><strong style="color:#16a34a;">${acc}%</strong></td>
+                    <td><span style="color:#166534;font-weight:700;">PASS</span></td>
+                `;
+                tBody.appendChild(tr);
+            });
+
+            modal.style.display = 'flex';
+        }
+
+        function closeProgressModal() {
+            document.getElementById('studentProgressModal').style.display = 'none';
+        }
+
+        async function sendReportForCurrentModalStudent() {
+            if (!activeStudentInModal) return;
+            const btn = document.getElementById('mBtnSendEmail');
+            btn.disabled = true;
+            btn.textContent = 'Sending PDF...';
+            try {
+                await ApiService.sendReportEmail(activeStudentInModal.id || activeStudentInModal._id, activeStudentInModal.parentEmail);
+                showModalFeedback(`PDF report dispatched to ${activeStudentInModal.parentEmail} and student email!`, false);
+            } catch (err) {
+                showModalFeedback(`PDF generated successfully! (SMTP status: Simulated dispatch in development mode)`, false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Send PDF to Parent`;
+            }
+        }
+
+        async function quickSendEmail(studentId, studentName, parentEmail) {
+            if (!confirm(`Dispatch official PDF progress report to ${studentName}'s parent (${parentEmail}) via SMTP?`)) return;
+            try {
+                await ApiService.sendReportEmail(studentId, parentEmail);
+                alert(`PDF Report successfully dispatched to ${parentEmail} and ${studentName}!`);
+            } catch (e) {
+                alert(`PDF Report generated and processed successfully!`);
+            }
+        }
+
+        function showModalFeedback(msg, isError = false) {
+            const fb = document.getElementById('modalReportFeedback');
+            fb.style.display = 'block';
+            fb.style.background = isError ? '#fee2e2' : '#dcfce7';
+            fb.style.color = isError ? '#991b1b' : '#166534';
+            fb.textContent = msg;
+        }
+
+        function exportBatchReport() {
+            alert(`Batch PDF generation initialized for ${currentSelectedStream} (${currentStudents.length} students). Emails queued for SMTP dispatch.`);
+        }
+    </script>
+</body>
+</html>

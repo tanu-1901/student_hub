@@ -1,0 +1,758 @@
+{
+  "html": {
+    "title": "HTML5 Fundamentals & Semantic Web",
+    "category": "Frontend",
+    "defaultDurationMinutes": 15,
+    "difficulty": "Easy",
+    "questions": [
+      {
+        "question": "Which HTML5 element is used to specify a footer for a document or section?",
+        "options": [
+          "<bottom>",
+          "<footer>",
+          "<section-end>",
+          "<nav-footer>"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The <footer> tag defines a footer for a document or section, typically containing author, copyright, or contact info."
+      },
+      {
+        "question": "What is the correct HTML5 Doctype declaration?",
+        "options": [
+          "<!DOCTYPE html5>",
+          "<!DOCTYPE HTML PUBLIC>",
+          "<!DOCTYPE html>",
+          "<doctype html>"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "In HTML5, the doctype is simplified to standard <!DOCTYPE html>."
+      },
+      {
+        "question": "Which HTML attribute specifies an alternate text for an image if the image cannot be displayed?",
+        "options": [
+          "title",
+          "src",
+          "alt",
+          "description"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "The 'alt' attribute provides alternate text for screen readers and in case the image fails to render."
+      },
+      {
+        "question": "Which input type defines a slider control in HTML5 forms?",
+        "options": [
+          "range",
+          "slider",
+          "scroll",
+          "controls"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "<input type='range'> renders a slider control."
+      },
+      {
+        "question": "Which tag is used to embed vector graphics directly into an HTML document?",
+        "options": [
+          "<canvas>",
+          "<svg>",
+          "<vector>",
+          "<graphics>"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "<svg> defines Scalable Vector Graphics directly in HTML markup."
+      }
+    ]
+  },
+  "css": {
+    "title": "CSS3 Styling, Flexbox & Grid Systems",
+    "category": "Frontend",
+    "defaultDurationMinutes": 15,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "In CSS Flexbox, which property aligns items along the cross axis?",
+        "options": [
+          "justify-content",
+          "align-items",
+          "flex-direction",
+          "align-content"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "align-items specifies the default alignment for items along the cross axis of the current flex line."
+      },
+      {
+        "question": "What does 'box-sizing: border-box;' do to an element's calculation?",
+        "options": [
+          "Adds margin to the width",
+          "Includes padding and border within the element's specified width and height",
+          "Removes padding completely",
+          "Prevents overflow on screen"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "'border-box' ensures padding and border are included inside width and height calculations."
+      },
+      {
+        "question": "Which CSS Grid property defines the number and widths of columns in a grid layout?",
+        "options": [
+          "grid-template-columns",
+          "grid-column-gap",
+          "grid-auto-columns",
+          "grid-columns-count"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "grid-template-columns defines the line names and track sizing functions of the grid columns."
+      },
+      {
+        "question": "Which CSS selector has the highest specificity?",
+        "options": [
+          "div.container",
+          "#main-header",
+          ".header .title",
+          "header nav a"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "ID selectors (#main-header) have higher specificity (0,1,0,0) than classes or element tags."
+      },
+      {
+        "question": "How do you apply styles only to screens narrower than 768px?",
+        "options": [
+          "@media (max-width: 768px)",
+          "@media (min-width: 768px)",
+          "@screen (width < 768px)",
+          "@responsive max: 768px"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "@media (max-width: 768px) targets viewports from 0px up to 768px wide."
+      }
+    ]
+  },
+  "javascript": {
+    "title": "JavaScript Core, Closures & Asynchronous ES6+",
+    "category": "Frontend",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Hard",
+    "questions": [
+      {
+        "question": "What is the primary difference between 'let' and 'var' in JavaScript?",
+        "options": [
+          "'var' is block-scoped; 'let' is function-scoped",
+          "'let' is block-scoped; 'var' is function-scoped",
+          "'let' cannot be reassigned; 'var' can be",
+          "There is no difference in ES6"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "'let' has block scope ({ ... }), while 'var' is scoped to the enclosing function."
+      },
+      {
+        "question": "What does the following code return: typeof NaN?",
+        "options": [
+          "'undefined'",
+          "'nan'",
+          "'number'",
+          "'object'"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "In JavaScript, NaN (Not-a-Number) is technically of the primitive type 'number'."
+      },
+      {
+        "question": "What is a Closure in JavaScript?",
+        "options": [
+          "A function that closes the browser window",
+          "A function bundled together with references to its surrounding lexical environment",
+          "A private JSON object with no getters",
+          "A method for terminating asynchronous promises"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "A closure gives an inner function access to its outer function's scope even after the outer function has returned."
+      },
+      {
+        "question": "Which method creates a new array populated with the results of calling a provided function on every element?",
+        "options": [
+          "forEach()",
+          "filter()",
+          "map()",
+          "reduce()"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "Array.prototype.map() returns a new transformed array without modifying the original."
+      },
+      {
+        "question": "What is the result of '2' + 2 - 1 in JavaScript?",
+        "options": [
+          "21",
+          "3",
+          "NaN",
+          "23"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "'2' + 2 performs string concatenation -> '22'. Then '22' - 1 coerces to number -> 21."
+      }
+    ]
+  },
+  "react": {
+    "title": "React JS Components, State & Hooks",
+    "category": "Frontend",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "Which hook is used to perform side effects in functional React components?",
+        "options": [
+          "useState",
+          "useEffect",
+          "useCallback",
+          "useSideEffect"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "useEffect serves the purpose of lifecycle methods like componentDidMount, componentDidUpdate, and componentWillUnmount."
+      },
+      {
+        "question": "What is the main benefit of React's Virtual DOM?",
+        "options": [
+          "It bypasses JavaScript execution completely",
+          "It minimizes costly direct DOM re-renders by batching and computing minimal diffs",
+          "It stores state directly in the browser's database",
+          "It replaces CSS stylesheets"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Virtual DOM reconciliation calculates the minimal set of real DOM operations necessary to reflect UI changes."
+      },
+      {
+        "question": "In React, how do you pass data from a parent component down to a child component?",
+        "options": [
+          "Using Redux store only",
+          "Using Props",
+          "Using HTML local storage",
+          "Using Event Emitters"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Props (short for properties) are the standard unidirectional mechanism to pass data down the component hierarchy."
+      },
+      {
+        "question": "Which hook memoizes expensive calculation results to prevent unnecessary recalculations on re-renders?",
+        "options": [
+          "useMemo",
+          "useRef",
+          "useCallback",
+          "useLayout"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "useMemo caches the computed result of a function and only recalculates it when dependencies change."
+      },
+      {
+        "question": "Why should keys be provided when rendering a list of elements in React?",
+        "options": [
+          "Keys make elements visible to search engines",
+          "Keys help React identify which items have changed, been added, or removed for efficient updates",
+          "Keys encrypt component state",
+          "Keys allow CSS animations to run faster"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Unique keys give list items a persistent identity so React reconciles lists efficiently without re-rendering all nodes."
+      }
+    ]
+  },
+  "node": {
+    "title": "Node.js Core Architecture & Asynchronous I/O",
+    "category": "Backend",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "Which component powers the asynchronous, non-blocking I/O event loop in Node.js?",
+        "options": [
+          "V8 Engine",
+          "Libuv",
+          "ChakraCore",
+          "Babel"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Libuv is the multi-platform C library that handles the event loop and asynchronous thread pool in Node.js."
+      },
+      {
+        "question": "Which core Node.js module is used to read and write files synchronously or asynchronously?",
+        "options": [
+          "path",
+          "os",
+          "fs",
+          "http"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "The 'fs' (file system) module provides both callback and promise-based APIs to interact with the file system."
+      },
+      {
+        "question": "What does the 'npm' command stand for?",
+        "options": [
+          "Node Program Manager",
+          "Node Package Manager",
+          "New Project Module",
+          "Network Protocol Method"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "NPM is the default package manager for Node.js."
+      },
+      {
+        "question": "What is a Buffer in Node.js used for?",
+        "options": [
+          "To store temporary CSS code",
+          "To handle raw binary data directly in memory",
+          "To speed up browser network requests",
+          "To encrypt passwords automatically"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The Buffer class provides instances to store and manipulate raw binary streams outside the V8 heap."
+      },
+      {
+        "question": "How can you run multiple instances of Node.js that can distribute workloads across multi-core systems?",
+        "options": [
+          "Using the cluster module",
+          "Using the url module",
+          "Using the path module",
+          "Using eval()"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "The cluster module allows easy creation of child worker processes that all share server ports."
+      }
+    ]
+  },
+  "express": {
+    "title": "Express.js REST APIs & Middleware Pipeline",
+    "category": "Backend",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "What parameter in an Express middleware function is invoked to pass control to the next handler?",
+        "options": [
+          "forward()",
+          "next()",
+          "continue()",
+          "dispatch()"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Calling next() passes control to the subsequent middleware function in the request-response stack."
+      },
+      {
+        "question": "Which built-in Express middleware is used to parse incoming requests with JSON payloads?",
+        "options": [
+          "express.json()",
+          "express.urlencoded()",
+          "express.raw()",
+          "express.static()"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "express.json() is a built-in middleware function based on body-parser to parse application/json payloads."
+      },
+      {
+        "question": "Which HTTP status code should be returned when a new resource is successfully created?",
+        "options": [
+          "200 OK",
+          "201 Created",
+          "204 No Content",
+          "302 Found"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "HTTP 201 indicates that the request succeeded and led to the creation of a new resource."
+      },
+      {
+        "question": "How do you access URL route parameters like '/students/:id' in Express?",
+        "options": [
+          "req.body.id",
+          "req.params.id",
+          "req.query.id",
+          "req.headers.id"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Named route parameters are captured and populated in the req.params object."
+      },
+      {
+        "question": "How do you define an Express error-handling middleware function?",
+        "options": [
+          "With 2 arguments: (req, res)",
+          "With 3 arguments: (req, res, next)",
+          "With 4 arguments: (err, req, res, next)",
+          "With 1 argument: (err)"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "Express identifies error-handling middleware by its 4-argument signature: (err, req, res, next)."
+      }
+    ]
+  },
+  "mongodb": {
+    "title": "MongoDB & Mongoose NoSQL Data Modeling",
+    "category": "Database",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Hard",
+    "questions": [
+      {
+        "question": "What binary format does MongoDB use internally to store and transmit documents?",
+        "options": [
+          "JSON",
+          "BSON",
+          "YAML",
+          "XML"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "MongoDB stores data in BSON (Binary JSON), extending JSON with additional data types like Date and raw binary."
+      },
+      {
+        "question": "Which operator is used to filter documents where a field matches any value in a specified array?",
+        "options": [
+          "$all",
+          "$in",
+          "$match",
+          "$or"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The $in operator selects documents where the field's value matches any value in the provided array."
+      },
+      {
+        "question": "In Mongoose, how do you define a foreign reference to another model?",
+        "options": [
+          "type: String, foreign: true",
+          "type: mongoose.Schema.Types.ObjectId, ref: 'ModelName'",
+          "type: Reference, target: 'ModelName'",
+          "type: Array, join: 'ModelName'"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Mongoose references another collection using ObjectId and the 'ref' property for populate queries."
+      },
+      {
+        "question": "What is an Aggregation Pipeline in MongoDB?",
+        "options": [
+          "A tool for backing up collections",
+          "A multi-stage framework for data transformation, grouping, and statistical calculations",
+          "A plugin for exporting collections to CSV",
+          "A command to repair corrupted databases"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The aggregation pipeline processes documents through stages (like $match, $group, $sort, $project) to compute aggregated results."
+      },
+      {
+        "question": "Which indexing feature ensures that no two documents have identical values for a specified field?",
+        "options": [
+          "Sparse index",
+          "Compound index",
+          "Unique index",
+          "Text index"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "A unique index ({ email: 1 }, { unique: true }) prevents duplicate values from being inserted."
+      }
+    ]
+  },
+  "python": {
+    "title": "Python Backend, Data Structures & OOP",
+    "category": "Backend",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "What is the primary difference between a Python List and a Tuple?",
+        "options": [
+          "Lists are immutable; Tuples are mutable",
+          "Lists are mutable; Tuples are immutable",
+          "Tuples cannot contain integers",
+          "Lists cannot be sliced"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Lists can be modified (mutable) after creation, whereas Tuples cannot be changed (immutable)."
+      },
+      {
+        "question": "What does the Global Interpreter Lock (GIL) in CPython do?",
+        "options": [
+          "Prevents database write deadlocks",
+          "Restricts execution of Python bytecode to one native thread at a time",
+          "Encrypts variables in memory",
+          "Compiles Python directly to machine code"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The GIL is a mutex that prevents multiple native threads from executing Python bytecodes simultaneously in CPython."
+      },
+      {
+        "question": "Which built-in Python function returns both the index and value during loop iteration?",
+        "options": [
+          "enumerate()",
+          "zip()",
+          "range()",
+          "iter()"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "enumerate(iterable) yields pairs containing an index count along with the value."
+      },
+      {
+        "question": "What does a Python decorator do?",
+        "options": [
+          "Adds graphic CSS styling to Python consoles",
+          "Wraps and alters or extends the behavior of a function or class without permanently modifying its source",
+          "Deletes unused memory variables",
+          "Enforces strict type declarations"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "A decorator is a callable that accepts another function as an argument and extends its behavior."
+      },
+      {
+        "question": "What is the output of: [x**2 for x in range(4) if x % 2 == 0]?",
+        "options": [
+          "[0, 1, 4, 9]",
+          "[0, 4]",
+          "[1, 9]",
+          "[4, 16]"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The even numbers in range(4) are 0 and 2. Their squares are 0**2 = 0 and 2**2 = 4 -> [0, 4]."
+      }
+    ]
+  },
+  "aptitude": {
+    "title": "Quantitative Aptitude & Arithmetic Reasoning",
+    "category": "Aptitude",
+    "defaultDurationMinutes": 25,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "If the speed of a train is 90 km/hr, what is its speed in meters per second (m/s)?",
+        "options": [
+          "20 m/s",
+          "25 m/s",
+          "30 m/s",
+          "18 m/s"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Convert km/hr to m/s by multiplying by 5/18: 90 * (5/18) = 5 * 5 = 25 m/s."
+      },
+      {
+        "question": "A product is bought for $400 and sold for $500. What is the profit percentage?",
+        "options": [
+          "20%",
+          "25%",
+          "30%",
+          "15%"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Profit = $100. Profit % = (100 / 400) * 100 = 25%."
+      },
+      {
+        "question": "If 12 men can complete a project in 20 days, how many days will 15 men take to complete the same work?",
+        "options": [
+          "14 days",
+          "15 days",
+          "16 days",
+          "18 days"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "Total Work = 12 * 20 = 240 man-days. Days for 15 men = 240 / 15 = 16 days."
+      },
+      {
+        "question": "Find the compound interest on $10,000 for 2 years at 10% per annum compounded annually.",
+        "options": [
+          "$2,000",
+          "$2,100",
+          "$2,200",
+          "$2,050"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Amount = 10,000 * (1.1)^2 = 10,000 * 1.21 = $12,100. CI = 12,100 - 10,000 = $2,100."
+      },
+      {
+        "question": "The ratio of boys to girls in a class of 60 students is 3:2. How many girls are there in the class?",
+        "options": [
+          "20",
+          "24",
+          "36",
+          "30"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Total parts = 3 + 2 = 5 parts. 1 part = 60 / 5 = 12. Girls = 2 * 12 = 24."
+      }
+    ]
+  },
+  "reasoning": {
+    "title": "Logical Reasoning, Analytical Logic & Series",
+    "category": "Aptitude",
+    "defaultDurationMinutes": 20,
+    "difficulty": "Easy",
+    "questions": [
+      {
+        "question": "Complete the numerical series: 3, 7, 15, 31, 63, ?",
+        "options": [
+          "95",
+          "127",
+          "115",
+          "125"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Pattern: Double and add 1 (3*2+1=7, 7*2+1=15, 15*2+1=31, 31*2+1=63, 63*2+1=127)."
+      },
+      {
+        "question": "Find the odd one out from the given group: Copper, Iron, Silver, Brass",
+        "options": [
+          "Copper",
+          "Iron",
+          "Silver",
+          "Brass"
+        ],
+        "correctAnswerIndex": 3,
+        "explanation": "Brass is an alloy (mixture of copper and zinc), whereas the others are pure elemental metals."
+      },
+      {
+        "question": "In a certain code, TEACHER is written as VGCEJGT. How is CHILDREN written in that code?",
+        "options": [
+          "EJKNFTGP",
+          "EJKNFGTO",
+          "EJKNFHTP",
+          "EJKNEHTP"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "Each letter is shifted by +2 positions in the alphabet: C->E, H->J, I->K, L->N, D->F, R->T, E->G, N->P."
+      },
+      {
+        "question": "Pointing to a man, a woman said: 'His mother is the only daughter of my mother.' How is the woman related to the man?",
+        "options": [
+          "Sister",
+          "Mother",
+          "Aunt",
+          "Grandmother"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "'Only daughter of my mother' refers to the woman herself. Therefore, she is the man's mother."
+      },
+      {
+        "question": "A clock shows 4:30. If the minute hand points to the East, in which direction will the hour hand point?",
+        "options": [
+          "North-East",
+          "South-East",
+          "North-West",
+          "South-West"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "At 4:30, the minute hand is at 6 (South normally). If South is East (90 deg counter-clockwise), then between 4 and 5 (South-East normally) rotated 90 deg counter-clockwise points to North-East."
+      }
+    ]
+  },
+  "english": {
+    "title": "Verbal Ability, Vocabulary & Grammar Mastery",
+    "category": "Aptitude",
+    "defaultDurationMinutes": 15,
+    "difficulty": "Easy",
+    "questions": [
+      {
+        "question": "Select the antonym for the word 'CANDID':",
+        "options": [
+          "Frank",
+          "Deceitful",
+          "Honest",
+          "Clear"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "'Candid' means truthful and straightforward. Its antonym is 'Deceitful' or guarded."
+      },
+      {
+        "question": "Choose the correct spelling:",
+        "options": [
+          "Accomodate",
+          "Acommodate",
+          "Accommodate",
+          "Acomodate"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "The correct spelling is 'Accommodate' with double 'c' and double 'm'."
+      },
+      {
+        "question": "Fill in the blank: Neither the teacher nor the students ______ present in the auditorium.",
+        "options": [
+          "was",
+          "were",
+          "is",
+          "has been"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "In 'Neither... nor...', the verb agrees with the closer subject ('the students' -> plural -> 'were')."
+      },
+      {
+        "question": "What is the meaning of the idiom 'To burn the midnight oil'?",
+        "options": [
+          "To waste electricity",
+          "To work or study late into the night",
+          "To start a dangerous fire",
+          "To cook an expensive meal"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "'To burn the midnight oil' means to work hard late at night."
+      },
+      {
+        "question": "Convert to Passive Voice: 'The chef prepared a delicious dinner.'",
+        "options": [
+          "A delicious dinner was prepared by the chef.",
+          "A delicious dinner is being prepared by the chef.",
+          "A delicious dinner had been prepared by the chef.",
+          "The dinner was preparing delicious by the chef."
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "Simple past active ('prepared') becomes 'was prepared' in passive voice."
+      }
+    ]
+  },
+  "gk": {
+    "title": "General Awareness, Science & Tech History 2026",
+    "category": "General",
+    "defaultDurationMinutes": 15,
+    "difficulty": "Medium",
+    "questions": [
+      {
+        "question": "Which artificial intelligence lab created the Transformer architecture in 2017 ('Attention Is All You Need')?",
+        "options": [
+          "OpenAI",
+          "Google Brain / Google Research",
+          "Meta AI",
+          "DeepMind"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "The seminal Transformer paper 'Attention Is All You Need' was authored by Google Brain & Google Research researchers in 2017."
+      },
+      {
+        "question": "Which planet in our solar system is known as the 'Red Planet'?",
+        "options": [
+          "Jupiter",
+          "Mars",
+          "Saturn",
+          "Venus"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Mars appears red due to the prevalence of iron oxide (rust) on its surface."
+      },
+      {
+        "question": "Who is universally recognized as the pioneer of the World Wide Web (WWW)?",
+        "options": [
+          "Bill Gates",
+          "Tim Berners-Lee",
+          "Steve Jobs",
+          "Alan Turing"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Sir Tim Berners-Lee invented the World Wide Web in 1989 while working at CERN."
+      },
+      {
+        "question": "Which gas is most abundant in Earth's atmosphere?",
+        "options": [
+          "Oxygen",
+          "Carbon Dioxide",
+          "Nitrogen",
+          "Argon"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "Nitrogen makes up approximately 78% of the Earth's atmosphere by volume."
+      },
+      {
+        "question": "What is the primary function of RAM in a computer system?",
+        "options": [
+          "Permanent optical data storage",
+          "Fast volatile working memory for currently executing programs",
+          "Power distribution to cooling fans",
+          "Hardware encryption"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "Random Access Memory (RAM) provides high-speed temporary read/write storage for active processes."
+      }
+    ]
+  }
+}

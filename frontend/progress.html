@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Progress - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .progress-wrapper { flex: 1; padding: 28px 20px; display: flex; justify-content: center; }
+        .progress-container { max-width: 1000px; width: 100%; }
+
+        /* ── Page Header ── */
+        .page-header { text-align: center; margin-bottom: 24px; }
+        .page-header h1 { font-size: 26px; color: #1e293b; font-weight: 800; }
+        .page-header p { color: #64748b; font-size: 14px; margin-top: 4px; }
+
+        /* ── Profile Card ── */
+        .profile-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #fff; border-radius: 20px; padding: 22px 26px;
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 24px; box-shadow: 0 10px 30px rgba(79,70,229,.3);
+        }
+        .profile-avatar {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: 800; border: 2px solid rgba(255,255,255,0.4);
+            flex-shrink: 0;
+        }
+        .profile-info h2 { font-size: 20px; margin-bottom: 2px; }
+        .profile-info p  { font-size: 13px; color: #c7d2fe; }
+
+        /* ── Stats Grid ── */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px; margin-bottom: 28px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 18px; border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 16px rgba(15,23,42,0.04);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+        .stat-value { font-size: 26px; font-weight: 800; color: #4f46e5; }
+        .stat-value.green  { color: #16a34a; }
+        .stat-value.orange { color: #ea580c; }
+        .stat-value.red    { color: #dc2626; }
+
+        /* ── Glass Sections ── */
+        .glass-section {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 20px; padding: 24px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 24px rgba(15,23,42,0.04);
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 18px; padding-bottom: 14px;
+            border-bottom: 1px solid rgba(226,232,240,0.6);
+        }
+        .section-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .section-icon.indigo { background: #eef2ff; color: #4f46e5; }
+        .section-icon.green  { background: #dcfce7; color: #16a34a; }
+        .section-icon.purple { background: #f5f3ff; color: #7c3aed; }
+        .section-icon.amber  { background: #fff7ed; color: #ea580c; }
+
+        .section-title { font-size: 16px; font-weight: 700; color: #1e293b; }
+        .section-sub   { font-size: 12px; color: #64748b; margin-top: 1px; }
+
+        /* ── Timer ── */
+        .timer-subject-row { margin-bottom: 14px; }
+        .timer-subject-row label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px; }
+        .timer-select {
+            padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px;
+            font-size: 14px; font-weight: 600; color: #334155;
+            background: rgba(248,250,252,0.9); cursor: pointer; outline: none;
+        }
+        .timer-select:focus { border-color: #4f46e5; }
+
+        .timer-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .timer-display {
+            font-size: 36px; font-weight: 800; color: #4f46e5;
+            font-variant-numeric: tabular-nums; letter-spacing: 2px;
+            min-width: 130px;
+            background: #eef2ff; border-radius: 12px; padding: 6px 14px;
+        }
+        .timer-display.running { color: #16a34a; background: #dcfce7; }
+
+        .btn-timer {
+            padding: 10px 18px; border: none; border-radius: 10px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            transition: all .2s; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-start  { background: #4f46e5; color: #fff; }
+        .btn-start:hover  { background: #4338ca; }
+        .btn-start:disabled  { background: #cbd5e1; cursor: not-allowed; }
+        .btn-stop   { background: #dc2626; color: #fff; }
+        .btn-stop:hover   { background: #b91c1c; }
+        .btn-stop:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .btn-reset  { background: rgba(241,245,249,0.9); color: #475569; border: 1px solid #cbd5e1; }
+        .btn-log    { background: #16a34a; color: #fff; }
+        .btn-log:hover { background: #15803d; }
+        .btn-log:disabled { background: #cbd5e1; cursor: not-allowed; }
+        #timerStatus { font-size: 13px; color: #64748b; margin-top: 10px; }
+
+        /* ── Charts Grid ── */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        @media (max-width: 700px) { .charts-grid { grid-template-columns: 1fr; } }
+        canvas { width: 100% !important; }
+
+        /* ── Table ── */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th {
+            background: rgba(248,250,252,0.9); color: #475569; font-weight: 700;
+            padding: 11px 14px; border-bottom: 1.5px solid #e2e8f0; white-space: nowrap;
+            text-align: left;
+        }
+        td { padding: 11px 14px; border-bottom: 1px solid rgba(241,245,249,0.8); color: #334155; white-space: nowrap; }
+        tr:last-child td { border-bottom: none; }
+        .badge { padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 11px; display: inline-block; }
+        .badge-pass { background: #dcfce7; color: #166534; }
+        .badge-fail { background: #fee2e2; color: #991b1b; }
+
+        /* ── Mastery Bars ── */
+        .progress-group { margin-bottom: 14px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        .bar-bg { width: 100%; height: 9px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; background: #4f46e5; border-radius: 5px; transition: width .6s ease; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="mock-tests.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Mock Tests
+            </a>
+            <a href="papers.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Practice Papers
+            </a>
+            <a href="puzzles.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Mind Gym
+            </a>
+            <a href="sliding-puzzle.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6"/><rect x="16" y="2" width="6" height="6"/><rect x="2" y="16" width="6" height="6"/><rect x="10" y="10" width="4" height="4"/></svg>
+                Sliding Puzzle
+            </a>
+            <a href="progress.html" class="active">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Progress
+            </a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge-pill">
+                <div class="user-avatar-circle" id="userAvatarCircle">S</div>
+                <span id="userEmailDisplay">student@gmail.com</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="progress-wrapper">
+        <div class="progress-container">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>My Progress Dashboard</h1>
+                <p>Track your study hours, test performance, and subject mastery over time.</p>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-avatar" id="profileAvatar">TS</div>
+                <div class="profile-info">
+                    <h2 id="profileName">Student</h2>
+                    <p id="profileSub">Loading profile...</p>
+                </div>
+            </div>
+
+            <!-- Overview Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Tests Taken</div>
+                    <div class="stat-value" id="statTests">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Questions</div>
+                    <div class="stat-value" id="statQuestions">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Correct Answers</div>
+                    <div class="stat-value green" id="statCorrect">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wrong Answers</div>
+                    <div class="stat-value red" id="statWrong">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Study Hours</div>
+                    <div class="stat-value orange" id="statHours">0h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="statAccuracy">0%</div>
+                </div>
+            </div>
+
+            <!-- Study Timer / Stopwatch -->
+            <div class="glass-section">
+                <div class="section-header">
+                    <div class="section-icon amber">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div>
+                        <div class="section-title">Study Timer — Log Your Session</div>
+                        <div class="section-sub">Start when you begin, stop when done, then log to track your hours.</div>
+                    </div>
+                </div>
+
+                <div class="timer-subject-row">
+                    <label for="timerSubjectSelect">Select Subject:</label>
+                    <select id="timerSubjectSelect" class="timer-select">
+                        <option value="javascript">JavaScript</option>
+                        <option value="html">HTML5</option>
+                        <option value="css">CSS3</option>
+                        <option value="react">React JS</option>
+                        <option value="node">Node.js</option>
+                        <option value="express">Express.js</option>
+                        <option value="mongodb">MongoDB</option>
+                        <option value="python">Python</option>
+                        <option value="reasoning">Reasoning</option>
+                        <option value="aptitude">Aptitude</option>
+                        <option value="english">English</option>
+                        <option value="gk">General Knowledge</option>
+                    </select>
+                </div>
+
+                <div class="timer-controls">
+                    <div class="timer-display" id="timerDisplay">00:00:00</div>
+                    <button class="btn-timer btn-start" id="btnStart" onclick="startStopwatch()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Start
+                    </button>
+                    <button class="btn-timer btn-stop" id="btnStop" onclick="stopStopwatch()" disabled>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                        Pause
+                    </button>
+                    <button class="btn-timer btn-reset" onclick="resetStopwatch()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.84"/></svg>
+                        Reset
+                    </button>
+                    <button class="btn-timer btn-log" id="btnLog" onclick="logStudySession()" disabled>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Log Session
+                    </button>
+                </div>
+                <div id="timerStatus"></div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="glass-section" style="margin-bottom:0;">
+                    <div class="section-header">
+                        <div class="section-icon indigo">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </div>
+                        <div class="section-title">Weekly Study Hours</div>
+                    </div>
+                    <canvas id="barChart" height="200"></canvas>
+                </div>
+                <div class="glass-section" style="margin-bottom:0;">
+                    <div class="section-header">
+                        <div class="section-icon purple">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                        </div>
+                        <div class="section-title">Subject Distribution</div>
+                    </div>
+                    <canvas id="pieChart" height="200"></canvas>
+                    <div id="pieLegend" style="margin-top:10px;font-size:12px;"></div>
+                </div>
+            </div>
+
+            <!-- Test History Table -->
+            <div class="glass-section">
+                <div class="section-header">
+                    <div class="section-icon indigo">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div class="section-title">Detailed Test History</div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test Name</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Questions</th>
+                                <th>Correct</th>
+                                <th>Wrong</th>
+                                <th>Accuracy</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">Loading history...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Subject Mastery Bars -->
+            <div class="glass-section">
+                <div class="section-header">
+                    <div class="section-icon green">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div class="section-title">Subject Mastery Breakdown</div>
+                </div>
+                <div id="masteryBars">
+                    <!-- dynamically rendered -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+    // ─────────────────────────────────────────────────────────────────
+    // AUTH GUARD
+    // ─────────────────────────────────────────────────────────────────
+    const progUser = ApiService.checkAuth('student');
+    if (!progUser) throw new Error('Not authenticated');
+
+    document.getElementById('userEmailDisplay').textContent = progUser.email;
+    document.getElementById('logoutBtn').addEventListener('click', () => ApiService.logout());
+
+    // Avatar initial
+    const pName = progUser.name || progUser.email.split('@')[0];
+    const pInitials = pName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    const avatarCircle = document.getElementById('userAvatarCircle');
+    if (avatarCircle) avatarCircle.textContent = pInitials.charAt(0);
+
+    // Profile card
+    document.getElementById('profileName').textContent = pName;
+    document.getElementById('profileAvatar').textContent = pInitials;
+    document.getElementById('profileSub').textContent =
+        `${progUser.stream || ''} ${progUser.classOrYear || ''} · ${progUser.email}`.trim();
+
+    // ─────────────────────────────────────────────────────────────────
+    // STOPWATCH
+    // ─────────────────────────────────────────────────────────────────
+    let swSeconds = 0, swRunning = false, swInterval = null;
+
+    function formatTime(secs) {
+        const h = Math.floor(secs / 3600).toString().padStart(2, '0');
+        const m = Math.floor((secs % 3600) / 60).toString().padStart(2, '0');
+        const s = (secs % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    }
+
+    function startStopwatch() {
+        if (swRunning) return;
+        swRunning = true;
+        document.getElementById('timerDisplay').classList.add('running');
+        document.getElementById('btnStart').disabled = true;
+        document.getElementById('btnStop').disabled = false;
+        document.getElementById('timerStatus').textContent = 'Timer running...';
+
+        swInterval = setInterval(() => {
+            swSeconds++;
+            document.getElementById('timerDisplay').textContent = formatTime(swSeconds);
+        }, 1000);
+    }
+
+    function stopStopwatch() {
+        if (!swRunning) return;
+        swRunning = false;
+        clearInterval(swInterval);
+        document.getElementById('timerDisplay').classList.remove('running');
+        document.getElementById('btnStart').disabled = false;
+        document.getElementById('btnStop').disabled = true;
+        document.getElementById('btnLog').disabled = swSeconds < 60;
+        const mins = Math.floor(swSeconds / 60);
+        document.getElementById('timerStatus').textContent =
+            swSeconds < 60 ? 'Study at least 1 minute to log a session.'
+            : `${mins} minute(s) ready to log. Select subject and click "Log Session".`;
+    }
+
+    function resetStopwatch() {
+        clearInterval(swInterval);
+        swRunning = false; swSeconds = 0;
+        document.getElementById('timerDisplay').textContent = '00:00:00';
+        document.getElementById('timerDisplay').classList.remove('running');
+        document.getElementById('btnStart').disabled = false;
+        document.getElementById('btnStop').disabled = true;
+        document.getElementById('btnLog').disabled = true;
+        document.getElementById('timerStatus').textContent = '';
+    }
+
+    async function logStudySession() {
+        const durationMins = Math.max(1, Math.floor(swSeconds / 60));
+        const subject = document.getElementById('timerSubjectSelect').value;
+        const btn = document.getElementById('btnLog');
+        btn.textContent = 'Logging...'; btn.disabled = true;
+
+        try {
+            const res = await ApiService.logStudySession(durationMins, subject);
+            if (res.success) {
+                document.getElementById('timerStatus').textContent =
+                    `${durationMins} min of ${subject} study logged successfully!`;
+                resetStopwatch();
+                loadAnalytics();
+            } else {
+                throw new Error(res.message || 'Log failed');
+            }
+        } catch (err) {
+            const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
+            sessions.push({ subject, durationMins, date: new Date().toISOString() });
+            localStorage.setItem('studySessions', JSON.stringify(sessions));
+            document.getElementById('timerStatus').textContent =
+                `${durationMins} min of ${subject} study saved locally (API offline).`;
+            resetStopwatch();
+            loadAnalytics();
+        }
+        btn.textContent = 'Log Session'; btn.disabled = false;
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // LOAD DATA
+    // ─────────────────────────────────────────────────────────────────
+    async function loadProgressData() {
+        try {
+            const [histRes, analyticsRes] = await Promise.allSettled([
+                ApiService.getTestHistory(),
+                ApiService.getStudyAnalytics()
+            ]);
+
+            const apiTests = (histRes.status === 'fulfilled' && histRes.value.success)
+                ? (histRes.value.tests || histRes.value.history || []) : [];
+            const localTests = JSON.parse(localStorage.getItem('testHistory') || '[]');
+            const map = new Map();
+            localTests.forEach(t => map.set(t._id || `${t.testTitle}_${t.date}`, t));
+            apiTests.forEach(t => {
+                const key = t._id || `${t.testTitle}_${t.date}`;
+                if (!map.has(key)) map.set(key, t);
+            });
+            const tests = map.size > 0 ? Array.from(map.values()) : getFallbackTests();
+
+            const analytics = (analyticsRes.status === 'fulfilled' && analyticsRes.value.success)
+                ? analyticsRes.value : null;
+
+            renderStats(tests, analytics);
+            renderHistoryTable(tests);
+            renderMasteryBars(tests);
+            renderBarChart(analytics);
+            renderPieChart(analytics, tests);
+
+        } catch (err) {
+            const tests = getFallbackTests();
+            renderStats(tests, null);
+            renderHistoryTable(tests);
+            renderMasteryBars(tests);
+            renderBarChart(null);
+            renderPieChart(null, tests);
+        }
+    }
+
+    async function loadAnalytics() {
+        try {
+            const res = await ApiService.getStudyAnalytics();
+            if (res.success) {
+                renderBarChart(res);
+                renderPieChart(res, null);
+            }
+        } catch (e) { /* silent */ }
+    }
+
+    function getFallbackTests() {
+        try {
+            const stored = localStorage.getItem('testHistory');
+            if (stored) return JSON.parse(stored);
+        } catch (e) {}
+        return [
+            { testTitle: 'Full Stack Mock Test', totalScore: 24, totalQuestions: 30, subject: 'javascript', date: 'Today' },
+            { testTitle: 'JavaScript ES6+', totalScore: 8, totalQuestions: 10, subject: 'javascript', date: 'Yesterday' },
+            { testTitle: 'CSS Layouts', totalScore: 7, totalQuestions: 10, subject: 'css', date: '2 days ago' },
+            { testTitle: 'Logical Reasoning', totalScore: 4, totalQuestions: 5, subject: 'reasoning', date: '3 days ago' }
+        ];
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // RENDER STATS
+    // ─────────────────────────────────────────────────────────────────
+    function renderStats(tests, analytics) {
+        const totalTests = tests.length;
+        const totalQ = tests.reduce((a, t) => a + (t.totalQuestions || 0), 0);
+        const totalCorrect = tests.reduce((a, t) => a + (t.totalScore ?? t.score ?? 0), 0);
+        const totalWrong = totalQ - totalCorrect;
+        const accuracy = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0;
+        const studyHours = analytics?.totalStudyMinutes
+            ? Math.round(analytics.totalStudyMinutes / 60 * 10) / 10
+            : getLocalStudyHours();
+
+        document.getElementById('statTests').textContent = totalTests;
+        document.getElementById('statQuestions').textContent = totalQ;
+        document.getElementById('statCorrect').textContent = totalCorrect;
+        document.getElementById('statWrong').textContent = totalWrong;
+        document.getElementById('statHours').textContent = `${studyHours}h`;
+        document.getElementById('statAccuracy').textContent = `${accuracy}%`;
+    }
+
+    function getLocalStudyHours() {
+        try {
+            const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
+            const totalMins = sessions.reduce((a, s) => a + (s.durationMins || 0), 0);
+            return Math.round(totalMins / 60 * 10) / 10;
+        } catch (e) { return 0; }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // RENDER TEST HISTORY TABLE
+    // ─────────────────────────────────────────────────────────────────
+    function renderHistoryTable(tests) {
+        const tbody = document.getElementById('historyTableBody');
+        if (tests.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No tests yet. Take your first mock test!</td></tr>';
+            return;
+        }
+        tbody.innerHTML = '';
+        [...tests].reverse().forEach(t => {
+            const score = t.totalScore ?? t.score ?? 0;
+            const total = t.totalQuestions ?? 0;
+            const wrong = total - score;
+            const acc = total > 0 ? Math.round((score / total) * 100) : 0;
+            const passed = acc >= 60;
+            const dateStr = t.date || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : '—');
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong>${t.testTitle || 'Test'}</strong></td>
+                <td>${(t.subject || '—').toUpperCase()}</td>
+                <td>${dateStr}</td>
+                <td>${total}</td>
+                <td style="color:#16a34a;font-weight:700">${score}</td>
+                <td style="color:#dc2626;font-weight:700">${wrong}</td>
+                <td>${acc}%</td>
+                <td><span class="badge ${passed ? 'badge-pass' : 'badge-fail'}">${passed ? 'Passed' : 'Needs Practice'}</span></td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // RENDER SUBJECT MASTERY BARS
+    // ─────────────────────────────────────────────────────────────────
+    function renderMasteryBars(tests) {
+        const subjectMap = {};
+        tests.forEach(t => {
+            const subj = t.subject || 'general';
+            if (!subjectMap[subj]) subjectMap[subj] = { correct: 0, total: 0 };
+            subjectMap[subj].correct += t.totalScore ?? t.score ?? 0;
+            subjectMap[subj].total += t.totalQuestions ?? 0;
+        });
+
+        const container = document.getElementById('masteryBars');
+        container.innerHTML = '';
+
+        if (Object.keys(subjectMap).length === 0) {
+            container.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px;">Take some tests to see your subject mastery!</p>';
+            return;
+        }
+
+        Object.entries(subjectMap).forEach(([subj, data]) => {
+            const acc = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+            const color = acc >= 80 ? '#16a34a' : acc >= 60 ? '#4f46e5' : '#ea580c';
+            container.innerHTML += `
+                <div class="progress-group">
+                    <div class="progress-label">
+                        <span>${subj.charAt(0).toUpperCase() + subj.slice(1)}</span>
+                        <span>${acc}%</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:${acc}%;background:${color}"></div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // BAR CHART
+    // ─────────────────────────────────────────────────────────────────
+    function renderBarChart(analytics) {
+        const canvas = document.getElementById('barChart');
+        const ctx = canvas.getContext('2d');
+
+        let labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        let values = [0, 0, 0, 0, 0, 0, 0];
+
+        if (analytics?.weeklyBarData && analytics.weeklyBarData.length > 0) {
+            labels = analytics.weeklyBarData.map(d => d.label || d.day || '');
+            values = analytics.weeklyBarData.map(d => +(d.hours || d.value || 0));
+        } else {
+            try {
+                const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
+                labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                values = [0, 0, 0, 0, 0, 0, 0];
+                sessions.forEach(s => {
+                    const d = new Date(s.date);
+                    const dayIdx = (d.getDay() + 6) % 7;
+                    values[dayIdx] += (s.durationMins || 0) / 60;
+                });
+                values = values.map(v => Math.round(v * 10) / 10);
+            } catch (e) { /* use zeros */ }
+        }
+
+        const W = canvas.parentElement.clientWidth - 40;
+        canvas.width = W || 300;
+        canvas.height = 200;
+
+        const maxVal = Math.max(...values, 1);
+        const barW = (W - 60) / labels.length;
+        const chartH = 160;
+        const startY = 10;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        values.forEach((val, i) => {
+            const barH = (val / maxVal) * chartH;
+            const x = 40 + i * barW + barW * 0.15;
+            const y = startY + chartH - barH;
+            const bw = barW * 0.7;
+
+            const grad = ctx.createLinearGradient(x, y, x, startY + chartH);
+            grad.addColorStop(0, '#6366f1');
+            grad.addColorStop(1, '#4f46e5');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(x, y, bw, barH, 4);
+            ctx.fill();
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(val > 0 ? `${val}h` : '', x + bw / 2, y - 4);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(labels[i], x + bw / 2, startY + chartH + 14);
+        });
+
+        ctx.save();
+        ctx.translate(12, startY + chartH / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Hours', 0, 0);
+        ctx.restore();
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PIE CHART
+    // ─────────────────────────────────────────────────────────────────
+    function renderPieChart(analytics, tests) {
+        const canvas = document.getElementById('pieChart');
+        const ctx = canvas.getContext('2d');
+
+        const COLORS = ['#4f46e5','#7c3aed','#16a34a','#ea580c','#0891b2','#db2777','#d97706','#059669'];
+
+        let slices = [];
+
+        if (analytics?.subjectPieData && analytics.subjectPieData.length > 0) {
+            slices = analytics.subjectPieData.map((d, i) => ({
+                label: d.subject || d.label || `Subject ${i+1}`,
+                value: +(d.minutes || d.value || 0),
+                color: COLORS[i % COLORS.length]
+            }));
+        } else if (tests && tests.length > 0) {
+            const map = {};
+            tests.forEach(t => {
+                const s = t.subject || 'general';
+                map[s] = (map[s] || 0) + (t.totalQuestions || 1);
+            });
+            slices = Object.entries(map).map(([label, value], i) => ({
+                label, value, color: COLORS[i % COLORS.length]
+            }));
+        }
+
+        if (slices.length === 0) {
+            slices = [
+                { label: 'JavaScript', value: 40, color: COLORS[0] },
+                { label: 'CSS', value: 20, color: COLORS[1] },
+                { label: 'Reasoning', value: 25, color: COLORS[2] },
+                { label: 'General', value: 15, color: COLORS[3] }
+            ];
+        }
+
+        const W = canvas.parentElement.clientWidth - 40;
+        canvas.width = W || 250;
+        canvas.height = 200;
+
+        const cx = canvas.width / 2;
+        const cy = 95;
+        const radius = 80;
+        const total = slices.reduce((a, s) => a + s.value, 0);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let startAngle = -Math.PI / 2;
+        slices.forEach(s => {
+            const angle = (s.value / total) * 2 * Math.PI;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, radius, startAngle, startAngle + angle);
+            ctx.closePath();
+            ctx.fillStyle = s.color;
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            startAngle += angle;
+        });
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius * 0.5, 0, 2 * Math.PI);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+
+        const legend = document.getElementById('pieLegend');
+        legend.innerHTML = slices.map(s => `
+            <span style="display:inline-flex;align-items:center;gap:4px;margin:3px 6px 3px 0;">
+                <span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span>
+                <span style="color:#475569">${s.label}</span>
+            </span>
+        `).join('');
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // BOOT
+    // ─────────────────────────────────────────────────────────────────
+    loadProgressData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Portal View - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .parent-container {
+            max-width: 980px;
+            margin: 24px auto;
+            padding: 0 20px 40px;
+        }
+
+        /* ── Header Card ── */
+        .parent-header-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #fff;
+            border-radius: 22px;
+            padding: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 12px 32px -6px rgba(79,70,229,0.4);
+        }
+
+        .student-profile-summary { display: flex; align-items: center; gap: 16px; }
+
+        .avatar-large {
+            width: 64px; height: 64px; border-radius: 50%;
+            background-color: rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 24px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            border: 2.5px solid rgba(255,255,255,0.4);
+        }
+
+        .student-details h2 { font-size: 22px; margin-bottom: 4px; }
+        .student-details p  { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+        .action-btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .action-btn {
+            border: none; padding: 11px 18px; border-radius: 12px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .download-btn { background: #fff; color: #4f46e5; }
+        .download-btn:hover { background: #f8fafc; transform: translateY(-2px); }
+
+        .send-btn { background: #22c55e; color: #fff; }
+        .send-btn:hover { background: #16a34a; transform: translateY(-2px); }
+
+        /* ── Glass Section Base ── */
+        .glass-card {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 24px rgba(15,23,42,0.04);
+            margin-bottom: 24px;
+        }
+
+        .glass-card h3 {
+            font-size: 16px; font-weight: 700; color: #1e293b;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .glass-card p.sub {
+            font-size: 13px; color: #64748b; margin-top: 2px; margin-bottom: 18px;
+        }
+
+        /* ── Day Selector ── */
+        .streak-container {
+            display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+        }
+
+        .day-box {
+            flex: 1; min-width: 70px;
+            background: rgba(248,250,252,0.9);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px; padding: 14px 8px;
+            text-align: center; font-size: 13px; font-weight: 700; color: #475569;
+            cursor: pointer; transition: all 0.2s ease; user-select: none;
+        }
+        .day-box:hover { border-color: #6366f1; background: #eef2ff; color: #4f46e5; }
+        .day-box.selected {
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+            color: #fff; border-color: #4f46e5;
+            box-shadow: 0 4px 14px rgba(79,70,229,0.3);
+        }
+        .day-box .hours-tag {
+            font-size: 11px; font-weight: 600; margin-top: 5px;
+            display: block; opacity: 0.9;
+        }
+
+        .day-details-panel {
+            background: rgba(238,242,255,0.6);
+            border: 1px solid rgba(199,210,254,0.5);
+            border-radius: 14px; padding: 16px 24px;
+            margin-top: 18px;
+            display: flex; justify-content: space-around; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+            border-left: 4px solid #4f46e5;
+        }
+        .detail-item { text-align: center; }
+        .detail-item .lbl { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .detail-item .val { font-size: 20px; font-weight: 800; color: #1e293b; margin-top: 2px; }
+
+        /* ── Details Grid ── */
+        .parent-details-grid {
+            display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px;
+        }
+        @media (max-width: 768px) { .parent-details-grid { grid-template-columns: 1fr; } }
+
+        /* ── Feedback Items ── */
+        .feedback-item {
+            padding: 14px 16px; border-radius: 12px;
+            margin-bottom: 12px; font-size: 13px; line-height: 1.6;
+        }
+        .feedback-strength    { background: #f0fdf4; border-left: 4px solid #22c55e; color: #15803d; }
+        .feedback-improvement { background: #fff7ed; border-left: 4px solid #f97316; color: #c2410c; }
+        .feedback-item strong { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+
+        /* ── Mastery Bars ── */
+        .mastery-bar-row { margin-bottom: 16px; }
+        .mastery-bar-label {
+            display: flex; justify-content: space-between;
+            font-size: 13px; font-weight: 600; margin-bottom: 6px;
+        }
+        .bar-bg { width: 100%; height: 9px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+
+        /* ── Print ── */
+        @media print {
+            .navbar, .action-btn-group { display: none !important; }
+            body { background: white !important; }
+            .parent-container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .parent-header-card { background: #4f46e5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="mock-tests.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Mock Tests
+            </a>
+            <a href="papers.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Practice Papers
+            </a>
+            <a href="puzzles.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Mind Gym
+            </a>
+            <a href="sliding-puzzle.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6"/><rect x="16" y="2" width="6" height="6"/><rect x="2" y="16" width="6" height="6"/><rect x="10" y="10" width="4" height="4"/></svg>
+                Sliding Puzzle
+            </a>
+            <a href="progress.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Progress
+            </a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge-pill">
+                <div class="user-avatar-circle" id="userAvatarCircle">S</div>
+                <span id="userEmailDisplay">student@gmail.com</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="parent-container" id="printableReport">
+
+        <!-- STUDENT PROFILE HEADER -->
+        <div class="parent-header-card">
+            <div class="student-profile-summary">
+                <div class="avatar-large" id="parentAvatar">TS</div>
+                <div class="student-details">
+                    <h2 id="parentStudentName">Tanu Singh</h2>
+                    <p id="parentStudentMeta">Class: 12th Standard • Roll No: STU-101 • Section: A</p>
+                    <p style="margin-top:4px;font-size:12px;">Parent Portal View — Live Academic Status</p>
+                </div>
+            </div>
+
+            <div class="action-btn-group">
+                <button class="action-btn send-btn" onclick="shareReportToParent()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6 19.79 19.79 0 0 1 1.61 5a2 2 0 0 1 1.95-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.1a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/></svg>
+                    Share via WhatsApp
+                </button>
+                <button class="action-btn download-btn" onclick="downloadPDFReport()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- 7-DAY STUDY CHECKER -->
+        <div class="glass-card">
+            <h3>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4f46e5;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                7-Day Practice & Study Breakdown
+            </h3>
+            <p class="sub">Click on any day below to check study duration, mock tests completed, and accuracy:</p>
+
+            <div class="streak-container" id="daySelectorContainer"></div>
+
+            <div class="day-details-panel" id="dayDetailsPanel">
+                <div class="detail-item">
+                    <div class="lbl">Selected Day</div>
+                    <div class="val" id="dayNameVal">Monday</div>
+                </div>
+                <div class="detail-item">
+                    <div class="lbl">Study Time</div>
+                    <div class="val" id="dayTimeVal">2.5 hrs</div>
+                </div>
+                <div class="detail-item">
+                    <div class="lbl">Tests / Puzzles</div>
+                    <div class="val" id="dayTestsVal">3 Attempted</div>
+                </div>
+                <div class="detail-item">
+                    <div class="lbl">Day Accuracy</div>
+                    <div class="val" id="dayAccVal" style="color:#16a34a;">92%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI INSIGHTS + MASTERY -->
+        <div class="parent-details-grid">
+            <div class="glass-card" style="margin-bottom:0;">
+                <h3>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4f46e5;"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><circle cx="18" cy="6" r="3"/></svg>
+                    AI Academic Counselor Insights for Parents
+                </h3>
+
+                <div class="feedback-item feedback-strength">
+                    <strong>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        Key Strength: High Reasoning & Logic Aptitude
+                    </strong>
+                    Tanu shows exceptional problem-solving speed in the Mind Gym and Full Stack Mock Tests, consistently answering JavaScript logic questions with 90%+ accuracy.
+                </div>
+
+                <div class="feedback-item feedback-strength">
+                    <strong>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Punctual & Consistent Study Routine
+                    </strong>
+                    Maintained a continuous 5-day active study streak with an average of 2.1 hours per session.
+                </div>
+
+                <div class="feedback-item feedback-improvement">
+                    <strong>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Suggested Improvement: Database & Async Workflows
+                    </strong>
+                    Occasional hesitation observed in SQL queries and Node.js backend questions. Encouraging 15 minutes of daily practice on Practice Papers is recommended.
+                </div>
+            </div>
+
+            <div class="glass-card" style="margin-bottom:0;">
+                <h3>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#4f46e5;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    Subject Mastery Status
+                </h3>
+
+                <div class="mastery-bar-row">
+                    <div class="mastery-bar-label">
+                        <span>Frontend Engineering</span>
+                        <span style="color:#16a34a;">94% (Mastered)</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:94%;background:#22c55e;"></div></div>
+                </div>
+
+                <div class="mastery-bar-row">
+                    <div class="mastery-bar-label">
+                        <span>Backend & Databases</span>
+                        <span style="color:#4f46e5;">78% (Good)</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:78%;background:#4f46e5;"></div></div>
+                </div>
+
+                <div class="mastery-bar-row">
+                    <div class="mastery-bar-label">
+                        <span>Cognitive IQ & Mind Gym</span>
+                        <span style="color:#8b5cf6;">90% (Excellent)</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:90%;background:#8b5cf6;"></div></div>
+                </div>
+
+                <div style="margin-top:20px;padding:12px;background:rgba(238,242,255,0.6);border-radius:10px;border:1px dashed #c7d2fe;font-size:12px;color:#64748b;display:flex;align-items:flex-start;gap:8px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span><b>Parent Note:</b> Data automatically updates each time your child completes a test or cognitive puzzle.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Auth guard
+        const pvUser = ApiService.getCurrentUser();
+        if (!pvUser) window.location.href = 'index.html';
+
+        // Set user display
+        const storedEmail = pvUser ? pvUser.email : (localStorage.getItem('studentEmail') || 'student@gmail.com');
+        const storedName  = pvUser ? (pvUser.name || pvUser.email.split('@')[0]) : (localStorage.getItem('studentName') || 'Student');
+
+        document.getElementById('userEmailDisplay').textContent = storedEmail;
+        document.getElementById('parentStudentName').textContent = storedName;
+
+        const initials = storedName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+        document.getElementById('parentAvatar').textContent = initials || 'S';
+        const avatarCircle = document.getElementById('userAvatarCircle');
+        if (avatarCircle) avatarCircle.textContent = initials.charAt(0) || 'S';
+
+        document.getElementById('logoutBtn').addEventListener('click', () => ApiService.logout());
+
+        // 7-DAY DATA
+        const weeklyData = [
+            { day: 'Mon', fullDay: 'Monday',           time: '2.5 hrs', tests: '3 Attempted', accuracy: '92%' },
+            { day: 'Tue', fullDay: 'Tuesday',          time: '1.8 hrs', tests: '2 Attempted', accuracy: '86%' },
+            { day: 'Wed', fullDay: 'Wednesday',        time: '3.0 hrs', tests: '4 Attempted', accuracy: '95%' },
+            { day: 'Thu', fullDay: 'Thursday',         time: '2.2 hrs', tests: '3 Attempted', accuracy: '89%' },
+            { day: 'Fri', fullDay: 'Friday',           time: '2.8 hrs', tests: '4 Attempted', accuracy: '94%' },
+            { day: 'Sat', fullDay: 'Saturday',         time: '1.2 hrs', tests: '1 Attempted', accuracy: '80%' },
+            { day: 'Sun', fullDay: 'Sunday (Today)',   time: '1.5 hrs', tests: '2 Attempted', accuracy: '90%' }
+        ];
+
+        function renderDaySelector() {
+            const container = document.getElementById('daySelectorContainer');
+            container.innerHTML = '';
+            weeklyData.forEach((item, index) => {
+                const box = document.createElement('div');
+                box.className = `day-box ${index === weeklyData.length - 1 ? 'selected' : ''}`;
+                box.innerHTML = `${item.day}<span class="hours-tag">${item.time}</span>`;
+                box.onclick = () => {
+                    document.querySelectorAll('.day-box').forEach(b => b.classList.remove('selected'));
+                    box.classList.add('selected');
+                    showDayDetails(item);
+                };
+                container.appendChild(box);
+            });
+            showDayDetails(weeklyData[weeklyData.length - 1]);
+        }
+
+        function showDayDetails(data) {
+            document.getElementById('dayNameVal').textContent  = data.fullDay;
+            document.getElementById('dayTimeVal').textContent  = data.time;
+            document.getElementById('dayTestsVal').textContent = data.tests;
+            document.getElementById('dayAccVal').textContent   = data.accuracy;
+        }
+
+        function downloadPDFReport() {
+            try {
+                const url = ApiService.downloadPdfReportUrl();
+                window.open(url, '_blank');
+            } catch(e) {
+                window.print();
+            }
+        }
+
+        function shareReportToParent() {
+            const studentName = document.getElementById('parentStudentName').textContent;
+            const message = `StudentPro Progress Report for ${studentName}:\n- Weekly Study Time: 15.0 Hours\n- Total Tests/Puzzles: 19 Completed\n- Average Accuracy: 89%\nCheck live detailed report at StudentPro!`;
+            if (navigator.share) {
+                navigator.share({ title: `${studentName} Progress Report`, text: message, url: window.location.href }).catch(() => {});
+            } else {
+                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderDaySelector);
+    </script>
+</body>
+</html>

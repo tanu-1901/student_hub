@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Sliding Puzzle - StudentPro</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+
+        .puzzle-page-wrapper {
+            flex: 1; display: flex;
+            justify-content: center; align-items: center;
+            padding: 30px 20px;
+        }
+
+        .puzzle-card {
+            background: rgba(255,255,255,0.84);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 24px; padding: 30px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 20px 48px -8px rgba(15,23,42,0.08);
+            text-align: center;
+            max-width: 490px; width: 100%;
+        }
+
+        .puzzle-card h1 {
+            font-size: 22px; font-weight: 800; color: #1e293b;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .puzzle-card p.subtitle { font-size: 13px; color: #64748b; margin-bottom: 18px; }
+
+        .controls {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 16px; gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-group { display: flex; align-items: center; gap: 6px; }
+        .control-group label { font-size: 13px; font-weight: 600; color: #475569; }
+
+        select {
+            padding: 7px 12px; border-radius: 8px;
+            border: 1.5px solid #cbd5e1; font-size: 13px;
+            background: rgba(248,250,252,0.9); outline: none; cursor: pointer; color: #1e293b;
+        }
+        select:focus { border-color: #4f46e5; }
+
+        .stats-bar {
+            display: flex; justify-content: space-around;
+            background: rgba(241,245,249,0.8);
+            border: 1px solid rgba(226,232,240,0.6);
+            padding: 10px 14px; border-radius: 12px;
+            margin-bottom: 16px; font-weight: 700;
+            font-size: 13px; color: #475569;
+        }
+
+        .puzzle-board {
+            display: grid; gap: 5px;
+            width: 320px; height: 320px;
+            margin: 0 auto 18px auto;
+            background: rgba(203,213,225,0.5);
+            padding: 6px; border-radius: 14px; overflow: hidden;
+            border: 1px solid rgba(226,232,240,0.6);
+        }
+
+        .tile {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #fff; font-weight: 800;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 8px; cursor: pointer;
+            user-select: none; transition: transform 0.08s ease;
+            box-shadow: 0 2px 6px rgba(79,70,229,0.25);
+            background-size: 320px 320px;
+        }
+        .tile:hover { opacity: 0.9; transform: scale(0.97); }
+        .tile.empty { background: transparent !important; box-shadow: none; cursor: default; transform: none; }
+
+        .btn-container { display: flex; gap: 10px; }
+
+        .game-btn {
+            flex: 1; background: linear-gradient(135deg, #4f46e5, #4338ca);
+            color: #fff; border: none; padding: 12px;
+            font-size: 14px; font-weight: 700; border-radius: 10px;
+            cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.2);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .game-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,70,229,0.3); }
+
+        .game-btn.secondary {
+            background: rgba(241,245,249,0.9); color: #475569;
+            border: 1.5px solid #cbd5e1; box-shadow: none;
+        }
+        .game-btn.secondary:hover { background: #e2e8f0; transform: translateY(-2px); }
+
+        .high-score { margin-top: 14px; font-size: 12.5px; color: #64748b; }
+        .win-message { margin-top: 12px; font-weight: 700; color: #16a34a; font-size: 15px; min-height: 22px; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">SP</div>
+            <span>StudentPro</span>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="mock-tests.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Mock Tests
+            </a>
+            <a href="papers.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Practice Papers
+            </a>
+            <a href="puzzles.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Mind Gym
+            </a>
+            <a href="sliding-puzzle.html" class="active">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6"/><rect x="16" y="2" width="6" height="6"/><rect x="2" y="16" width="6" height="6"/><rect x="10" y="10" width="4" height="4"/></svg>
+                Sliding Puzzle
+            </a>
+            <a href="progress.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Progress
+            </a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge-pill">
+                <div class="user-avatar-circle" id="userAvatarCircle">S</div>
+                <span id="userEmailDisplay">student@gmail.com</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="puzzle-page-wrapper">
+        <div class="puzzle-card">
+            <h1>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6"/><rect x="16" y="2" width="6" height="6"/><rect x="2" y="16" width="6" height="6"/><rect x="10" y="10" width="4" height="4"/></svg>
+                Sliding Puzzle Challenge
+            </h1>
+            <p class="subtitle">Reorder the tiles sequentially to test your spatial memory & problem solving.</p>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="difficultySelect">Size:</label>
+                    <select id="difficultySelect">
+                        <option value="3">3×3 (Easy)</option>
+                        <option value="4" selected>4×4 (Classic)</option>
+                        <option value="5">5×5 (Hard)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="modeSelect">Mode:</label>
+                    <select id="modeSelect">
+                        <option value="numbers">Numbers</option>
+                        <option value="image">Image</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <span>Moves: <strong id="moveCount">0</strong></span>
+                <span>Time: <strong id="timer">00:00</strong></span>
+            </div>
+
+            <div class="puzzle-board" id="board"></div>
+
+            <div class="btn-container">
+                <button class="game-btn" id="restartBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.84"/></svg>
+                    Shuffle & Restart
+                </button>
+                <a href="puzzles.html" class="game-btn secondary" style="text-decoration:none;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    More Puzzles
+                </a>
+            </div>
+
+            <div class="win-message" id="winMessage"></div>
+            <div class="high-score" id="highScoreText">Best Record: --</div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Auth & nav
+        const spUser = ApiService.getCurrentUser();
+        if (spUser) {
+            document.getElementById('userEmailDisplay').textContent = spUser.email;
+            const initials = (spUser.name || spUser.email).charAt(0).toUpperCase();
+            const avatarCircle = document.getElementById('userAvatarCircle');
+            if (avatarCircle) avatarCircle.textContent = initials;
+        }
+        document.getElementById('logoutBtn').addEventListener('click', () => ApiService.logout());
+
+        const boardEl          = document.getElementById("board");
+        const moveCountEl      = document.getElementById("moveCount");
+        const timerEl          = document.getElementById("timer");
+        const winMessageEl     = document.getElementById("winMessage");
+        const restartBtn       = document.getElementById("restartBtn");
+        const difficultySelect = document.getElementById("difficultySelect");
+        const modeSelect       = document.getElementById("modeSelect");
+        const highScoreText    = document.getElementById("highScoreText");
+
+        let gridSize = parseInt(difficultySelect.value);
+        let boardState = [], moves = 0, isSolved = false;
+        let timerInterval = null, secondsElapsed = 0;
+        let imageUrl = "https://picsum.photos/320/320";
+
+        // Audio
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        function playTone(freq, type, duration) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContextClass();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type; osc.frequency.value = freq;
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+        function playMoveSound() { playTone(400, 'sine', 0.1); }
+        function playWinSound() {
+            playTone(523.25, 'triangle', 0.2);
+            setTimeout(() => playTone(659.25, 'triangle', 0.2), 150);
+            setTimeout(() => playTone(783.99, 'triangle', 0.3), 300);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); secondsElapsed = 0; timerEl.textContent = "00:00";
+            timerInterval = setInterval(() => {
+                if (!isSolved) {
+                    secondsElapsed++;
+                    const mins = Math.floor(secondsElapsed / 60).toString().padStart(2,'0');
+                    const secs = (secondsElapsed % 60).toString().padStart(2,'0');
+                    timerEl.textContent = `${mins}:${secs}`;
+                }
+            }, 1000);
+        }
+
+        function updateHighScoreDisplay() {
+            const bestMoves = localStorage.getItem(`best_moves_${gridSize}`);
+            const bestTime  = localStorage.getItem(`best_time_${gridSize}`);
+            highScoreText.textContent = (bestMoves && bestTime)
+                ? `Best Record (${gridSize}x${gridSize}): ${bestMoves} moves in ${bestTime}s`
+                : `Best Record (${gridSize}x${gridSize}): None yet`;
+        }
+
+        function initGame() {
+            gridSize = parseInt(difficultySelect.value);
+            boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            boardEl.style.gridTemplateRows    = `repeat(${gridSize}, 1fr)`;
+            const totalTiles = gridSize * gridSize;
+            boardState = Array.from({ length: totalTiles - 1 }, (_, i) => i + 1);
+            boardState.push(0);
+            shuffleBoard(); moves = 0; isSolved = false;
+            moveCountEl.textContent = moves; winMessageEl.textContent = "";
+            updateHighScoreDisplay(); startTimer();
+        }
+
+        function renderBoard() {
+            boardEl.innerHTML = "";
+            const isImageMode = modeSelect.value === "image";
+            const tileSize = 320 / gridSize;
+            const fontSize = gridSize === 3 ? "28px" : gridSize === 4 ? "22px" : "18px";
+            boardState.forEach((val, idx) => {
+                const tile = document.createElement("div");
+                tile.className = val === 0 ? "tile empty" : "tile";
+                tile.style.fontSize = fontSize;
+                if (val !== 0) {
+                    if (isImageMode) {
+                        const correctIndex = val - 1;
+                        const row = Math.floor(correctIndex / gridSize);
+                        const col = correctIndex % gridSize;
+                        tile.style.backgroundImage = `url(${imageUrl})`;
+                        tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+                    } else {
+                        tile.style.backgroundImage = "none";
+                        tile.textContent = val;
+                    }
+                }
+                tile.addEventListener("click", () => handleTileClick(idx));
+                boardEl.appendChild(tile);
+            });
+        }
+
+        function handleTileClick(index) {
+            if (isSolved) return;
+            const emptyIndex = boardState.indexOf(0);
+            const validMoves = getValidMoves(emptyIndex);
+            if (validMoves.includes(index)) {
+                [boardState[emptyIndex], boardState[index]] = [boardState[index], boardState[emptyIndex]];
+                moves++; moveCountEl.textContent = moves;
+                playMoveSound(); renderBoard(); checkWinCondition();
+            }
+        }
+
+        function getValidMoves(emptyIdx) {
+            const row = Math.floor(emptyIdx / gridSize);
+            const col = emptyIdx % gridSize;
+            const valid = [];
+            if (row > 0) valid.push(emptyIdx - gridSize);
+            if (row < gridSize - 1) valid.push(emptyIdx + gridSize);
+            if (col > 0) valid.push(emptyIdx - 1);
+            if (col < gridSize - 1) valid.push(emptyIdx + 1);
+            return valid;
+        }
+
+        function shuffleBoard() {
+            const shuffleSteps = gridSize * gridSize * 25;
+            for (let i = 0; i < shuffleSteps; i++) {
+                const emptyIndex = boardState.indexOf(0);
+                const validMoves = getValidMoves(emptyIndex);
+                const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+                [boardState[emptyIndex], boardState[randomMove]] = [boardState[randomMove], boardState[emptyIndex]];
+            }
+            renderBoard();
+        }
+
+        function checkWinCondition() {
+            const totalTiles = gridSize * gridSize;
+            const hasWon = boardState.every((val, idx) => idx === totalTiles - 1 ? val === 0 : val === idx + 1);
+            if (hasWon) {
+                isSolved = true; clearInterval(timerInterval); playWinSound();
+                winMessageEl.textContent = `Completed in ${moves} moves and ${timerEl.textContent}!`;
+                const bestMoves = localStorage.getItem(`best_moves_${gridSize}`);
+                if (!bestMoves || moves < parseInt(bestMoves)) {
+                    localStorage.setItem(`best_moves_${gridSize}`, moves);
+                    localStorage.setItem(`best_time_${gridSize}`, secondsElapsed);
+                    updateHighScoreDisplay();
+                }
+            }
+        }
+
+        restartBtn.addEventListener("click", initGame);
+        difficultySelect.addEventListener("change", initGame);
+        modeSelect.addEventListener("change", renderBoard);
+        initGame();
+    </script>
+</body>
+</html>

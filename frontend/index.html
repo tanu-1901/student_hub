@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentPro - AI Performance & Cognitive Tracking System</title>
+    <link rel="stylesheet" href="css/login.css">
+    <style>
+        .demo-buttons-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .demo-fill-btn {
+            flex: 1;
+            background: #eef2ff;
+            color: #4f46e5;
+            border: 1px dashed #6366f1;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .demo-fill-btn:hover {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+
+        .demo-teacher-btn {
+            background: #fdf2f8;
+            color: #db2777;
+            border-color: #f472b6;
+        }
+
+        .demo-teacher-btn:hover {
+            background: #db2777;
+            color: #ffffff;
+        }
+
+        .guest-explore-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 12px;
+            text-align: center;
+            background: rgba(248, 250, 252, 0.9);
+            border: 1.5px solid #cbd5e1;
+            color: #334155;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .guest-explore-btn:hover {
+            background: #ffffff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 13px 20px;
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
+        }
+
+        .register-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13.5px;
+            color: #64748b;
+        }
+
+        .register-section a {
+            color: #4f46e5;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        .register-section a:hover {
+            text-decoration: underline;
+        }
+
+        .demo-login {
+            background: rgba(241, 245, 249, 0.65);
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- Left Information Section -->
+        <section class="login-info">
+            <div class="brand">
+                <div class="brand-icon">SP</div>
+                <span>StudentPro</span>
+            </div>
+
+            <div class="info-content">
+                <span class="tagline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    FULLSTACK ACADEMIC & COGNITIVE HUB
+                </span>
+                <h1>Empower Your <span>Learning</span> & Test Mastery.</h1>
+                <p>Track mock test scores, analyze cognitive speed, solve IQ logic puzzles, and generate official academic PDF progress reports dispatched directly to parents via SMTP.</p>
+
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon-pill indigo">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </div>
+                        <div>
+                            <h3>Real-Time Test Analytics</h3>
+                            <p>Instant subject scoring, accuracy percentages, and automated topic-level recommendations.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon-pill purple">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><circle cx="12" cy="8" r="2"/><path d="M15 13a3 3 0 0 0-6 0"/></svg>
+                        </div>
+                        <div>
+                            <h3>Executive Teacher Panel</h3>
+                            <p>Filter students by stream & branch, inspect individual progress boards, and monitor curriculum readiness.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon-pill emerald">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div>
+                            <h3>Official PDF Reports via SMTP</h3>
+                            <p>Generate downloadable PDF report cards and dispatch them straight to parents with one click.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-text">
+                © 2026 StudentPro Academic Portal. Enterprise Grade Architecture.
+            </div>
+        </section>
+
+        <!-- Right Login Section -->
+        <section class="login-section">
+            <div class="login-card">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">SP</div>
+                    <span>StudentPro</span>
+                </div>
+
+                <div class="login-header">
+                    <h2>Welcome Back</h2>
+                    <p>Select your portal role and sign in to continue.</p>
+                </div>
+
+                <!-- ROLE SELECTOR SWITCH (NO EMOJIS, CLEAN SVGS) -->
+                <div class="role-switch">
+                    <button type="button" class="role-btn active" id="roleStudentBtn" onclick="selectRole('student')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        Student Portal
+                    </button>
+                    <button type="button" class="role-btn" id="roleTeacherBtn" onclick="selectRole('teacher')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        Teacher Portal
+                    </button>
+                </div>
+
+                <form id="loginForm">
+                    <input type="hidden" id="selectedRole" value="student">
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="name@example.com" autocomplete="email" required>
+                        <small id="emailError" style="color: #dc2626; font-size: 12px;"></small>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="password">Password</label>
+                            <a href="#" class="forgot-password" onclick="alert('Use Demo Credentials: student@gmail.com or teacher@gmail.com with password: password123'); return false;">Forgot?</a>
+                        </div>
+                        <div class="password-box">
+                            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required>
+                            <button type="button" class="toggle-password" id="togglePassword">Show</button>
+                        </div>
+                        <small id="passwordError" style="color: #dc2626; font-size: 12px;"></small>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="remember-row">
+                        <label class="remember">
+                            <input type="checkbox" id="rememberMe" checked>
+                            <span>Remember me for 30 days</span>
+                        </label>
+                    </div>
+
+                    <!-- Message Alert Banner -->
+                    <div id="loginMessage" class="login-message" style="display: none;"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="login-button" id="loginButton">
+                        <span id="buttonText">Sign In to Student Dashboard</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+
+                    <!-- Direct Explore / Guest Mode Button -->
+                    <button type="button" class="guest-explore-btn" onclick="guestLogin()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Direct Demo Access (1-Click)
+                    </button>
+
+                </form>
+
+                <!-- Register Link -->
+                <div class="register-section">
+                    <span>Don't have an account?</span>
+                    <a href="register.html">Create an Account</a>
+                </div>
+
+                <!-- Demo Credentials Box -->
+                <div class="demo-login" style="margin-top: 18px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 6px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        Preloaded Demo Accounts:
+                    </div>
+                    <div class="demo-buttons-row">
+                        <button type="button" class="demo-fill-btn" onclick="fillStudentDemo()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                            Student Demo
+                        </button>
+                        <button type="button" class="demo-fill-btn demo-teacher-btn" onclick="fillTeacherDemo()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            Teacher Demo
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/login.js"></script>
+    <script>
+        function selectRole(role) {
+            document.getElementById('selectedRole').value = role;
+            const studentBtn = document.getElementById('roleStudentBtn');
+            const teacherBtn = document.getElementById('roleTeacherBtn');
+            const buttonText = document.getElementById('buttonText');
+
+            if (role === 'teacher') {
+                teacherBtn.classList.add('active');
+                studentBtn.classList.remove('active');
+                buttonText.textContent = 'Sign In to Teacher Panel';
+            } else {
+                studentBtn.classList.add('active');
+                teacherBtn.classList.remove('active');
+                buttonText.textContent = 'Sign In to Student Dashboard';
+            }
+        }
+
+        function fillStudentDemo() {
+            selectRole('student');
+            document.getElementById('email').value = 'student@gmail.com';
+            document.getElementById('password').value = '123456';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+        }
+
+        function fillTeacherDemo() {
+            selectRole('teacher');
+            document.getElementById('email').value = 'teacher@gmail.com';
+            document.getElementById('password').value = '123456';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+        }
+
+        function guestLogin() {
+            const role = document.getElementById('selectedRole').value || 'student';
+            if (role === 'teacher') {
+                fillTeacherDemo();
+            } else {
+                fillStudentDemo();
+            }
+            document.getElementById('loginButton').click();
+        }
+    </script>
+</body>
+
+</html>
