@@ -1,0 +1,23 @@
+{
+  "name": "studentpro-fullstack",
+  "version": "1.0.0",
+  "description": "StudentPro Fullstack AI-Powered Academic Performance & Cognitive Tracking Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "install:backend": "cd backend && npm install",
+    "build": "cd backend && npm install --omit=dev"
+  },
+  "keywords": [
+    "studentpro",
+    "fullstack",
+    "docker",
+    "render",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "StudentPro Team",
+  "license": "ISC"
+}

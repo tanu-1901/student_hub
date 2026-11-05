@@ -1,0 +1,31 @@
+# Dependencies & Cache
+node_modules
+*/node_modules
+.npm
+.cache
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Git & IDE
+.git
+.gitignore
+.vscode
+.idea
+
+# Logs & Runtime
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+backend/logs
+
+# OS generated files
+.DS_Store
+Thumbs.db
